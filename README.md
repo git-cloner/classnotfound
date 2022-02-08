@@ -1,5 +1,5 @@
 # classnotfound
-classnotfound.com.cn
+classnotfound.com.cn,The Chinese version of the findjar.com synchronizes the jar information from the maven center, parses out the class name stored in the database for retrieval, and solves the classnotfoundexception.
 ## build
 ```
 mvnw package
