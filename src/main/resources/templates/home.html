@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+	<meta charset="UTF-8">
+	<title>classnotfound.com.cn</title>
+	<meta name="keywords" content="ClassNotFoundException,NoClassDefFoundError,findjar">
+	<meta name="description" content="findjar by classname,中国版的findjar.com">
+	<meta name="author" content="gitclone,gitclone@126.com">
+	<meta name="robots" content="all">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+	<script th:href="@{/webjars/jquery/3.4.0/jquery.min.js} "></script>
+	<link href="/css/classnotfound.css" rel="stylesheet">
+</head>
+
+<body>
+	<header>
+		<div class="navbar navbar-dark bg-dark shadow-sm navbar-fixed-top">
+			<div class="container d-flex justify-content-between">
+				<a href="https://classnotfound.com.cn/" class="navbar-brand d-flex align-items-center">
+					<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+						class="bi bi-code-square" viewBox="0 0 16 16">
+						<path
+							d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+						<path
+							d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z" />
+					</svg>
+					<strong>&nbsp;&nbsp;<span th:text=#{classnotfound}></span></strong>
+				</a>
+				<a href="https://gitclone.com" class="navbar-brand d-flex align-items-center"
+					target="_blank" th:text=#{gitclone.com}></a>
+			</div>
+		</div>
+	</header>
+	<main role="main">
+		<div class="container">
+			<div class="row" style="height:150px">
+				<div class="mx-auto form-inline">
+					<img src="/img/logo.png" class="img-rounded">
+					<h3>Class Not Found</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-1"></div>
+				<div class="mx-auto">
+					<form class="form-inline" role="form" action="#" th:action="@{/home}" th:object="${cnf_search}"
+						method="POST">
+						<div class="form-group">
+							<input type="text" class="form-control input-large" id="className"
+								th:placeholder="org.springframework.stereotype.Service" th:field="*{className}"
+								placeholder=".input-large">
+							<button type="submit" class="btn btn-outline-primary" th:text=#{search} style="width:100px"></button>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-1"></div>
+			</div>
+			<div class="row" style="height:20px">
+			</div>
+			<div class="row" th:style="'display:' + @{(${page.getTotalCount()} ==0 ? 'none' : 'inline-block')} + ''">
+				<table class="table">
+					<tr>
+						<th th:text=#{className}></th>
+						<th th:text=#{filename}></th>
+						<th th:text=#{modifyDate}></th>
+						<th th:text=#{size}></th>
+						<th th:text=#{mirror}></th>
+						<th th:text=#{otherver}></th>
+					</tr>
+					<tr data-th-each="jars :${page.getDatas()}">
+						<td data-th-text="${jars.class_name}">...</td>
+						<td>
+							<a th:href="${jars.jar}" target="_blank" th:text="${jars.file_name}" />
+						</td>
+						<td data-th-text="${#dates.format(jars.upt_date,'yyyyMMdd')}"></td>
+						<td data-th-text="${#numbers.formatDecimal(jars.size, 0, 'COMMA', 0, 'POINT')}"></td>
+						<td>
+							<a th:href="${jars.mirror1}" target="_blank" th:text="1" />
+							<a th:href="${jars.mirror2}" target="_blank" th:text="2" />
+							<a th:href="${jars.mirror3}" target="_blank" th:text="3" />
+						</td>
+						<td>
+							<a th:href="@{/otherver/(jarUrl=${jars.jar},currentPage=1,pageSize=${page.pageSize} )}"
+								target="_blank" th:text="oldver" />
+						</td>
+					</tr>
+				</table>
+				<nav aria-label="Page navigation">
+					<ul class="pagination breadcrumb">
+						<li class="breadcrumb-item">
+							<div>
+								<span>&nbsp;&nbsp;</span>
+								<span th:text="${cnf_search.findT}"/>ms&nbsp;&nbsp;
+								<span th:text="#{TotalCount}" />:&nbsp;<span
+									th:text="${page.getTotalCount()}"></span>&nbsp;&nbsp;
+								<span th:text="#{TotalPageCount}" />:&nbsp;<span
+									th:text="${page.getTotalPageCount()}"></span>&nbsp;&nbsp;
+								<span th:text="#{CurrentPage}" />:&nbsp;<span
+									th:text="${page.getCurrentPage()}"></span>&nbsp;&nbsp;
+							</div>
+						</li>
+						<li class="breadcrumb-item">
+							<a th:href="@{/home/(className=${cnf_search.className},currentPage=1,pageSize=${page.pageSize} )}" 
+								aria-label="Previous">
+								<span aria-hidden="true">&laquo;<span th:text="#{firstPage}" /></span>
+							</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a th:href="@{/home/(className=${cnf_search.className},currentPage=${page.currentPage-1},pageSize=${page.pageSize} )}"
+								aria-label="Previous">
+								<span aria-hidden="true">&laquo;<span th:text="#{prevPage}" /></span>
+							</a>
+						</li>
+
+						<li class="breadcrumb-item">
+							<a th:href="@{/home/(className=${cnf_search.className},currentPage=${page.currentPage+1},pageSize=${page.pageSize} )}" 
+								aria-label="Next">
+								<span aria-hidden="true"><span th:text="#{nextPage}" />&raquo;</span>
+							</a>
+						</li>
+
+						<li class="breadcrumb-item">
+							<a th:href="@{/home/(className=${cnf_search.className},currentPage=${page.totalPageCount},pageSize=${page.pageSize} )}" 
+								aria-label="Next">
+								<span aria-hidden="true"><span th:text="#{lastPage}" />&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</main>
+	<footer class="footer mt-auto py-3">
+		<div class="container">
+			<div class="row">
+				<div class="mx-auto">
+					<strong>
+						<span
+							th:text="#{syncing}"></span>&nbsp;&nbsp;
+						<span
+							th:text="${#numbers.formatDecimal(cnf_search.jarCount, 0, 'COMMA', 0, 'POINT')}"></span>&nbsp;&nbsp;jars,
+						<span
+							th:text="${#numbers.formatDecimal(cnf_search.classCount, 0, 'COMMA', 0, 'POINT')}"></span>&nbsp;&nbsp;classes
+					</strong>
+				</div>
+			</div>
+			<div class="row">
+				<div class="mx-auto">
+					<a href="https://beian.miit.gov.cn" target="_blank">宁ICP备20000544号-2</a>|<span
+						th:text="#{copyright}"></span>|<span th:text="#{mail}"></span>
+				</div>
+			</div>
+	</footer>
+	<script>
+		window.onload = function () {
+			document.getElementById("className").focus();
+		};
+	</script>
+</body>
+
+</html>

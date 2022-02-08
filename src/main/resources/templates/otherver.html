@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+	<meta charset="UTF-8">
+	<title>classnotfound.com.cn</title>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+	<script th:href="@{/webjars/jquery/3.4.0/jquery.min.js} "></script>
+	<link href="/css/classnotfound.css" rel="stylesheet">
+</head>
+
+<body>
+	<header>
+		<div class="navbar navbar-dark bg-dark shadow-sm navbar-fixed-top">
+			<div class="container d-flex justify-content-between">
+				<a href="https://classnotfound.com.cn/" class="navbar-brand d-flex align-items-center">
+					<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+						class="bi bi-code-square" viewBox="0 0 16 16">
+						<path
+							d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+						<path
+							d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z" />
+					</svg>
+					<strong>&nbsp;&nbsp;<span th:text=#{classnotfound}></span></strong>
+				</a>
+				<a href="https://gitclone.com" class="navbar-brand d-flex align-items-center" target="_blank"
+					th:text=#{gitclone.com}></a>
+			</div>
+		</div>
+	</header>
+	<main role="main">
+		<div class="container">
+			<div class="row" style="height:80px">
+				<div class="form-inline">
+					<p class="float-left">
+					<h3 th:text="#{otherver}"></h3>
+					</p>
+				</div>
+			</div>
+			<div class="row" th:style="'display:' + @{(${page.getTotalCount()} ==0 ? 'none' : 'inline-block')} + ''">
+				<table class="table" style="width:100%">
+					<tr>
+						<th th:text=#{filename}></th>
+						<th th:text=#{modifyDate}></th>
+						<th th:text=#{size}></th>
+						<th th:text=#{mirror}></th>
+					</tr>
+					<tr data-th-each="jars :${page.getDatas()}">
+						<td>
+							<a th:href="${jars.jar}" target="_blank" th:text="${jars.file_name}" />
+						</td>
+						<td data-th-text="${#dates.format(jars.upt_date,'yyyyMMdd')}"></td>
+						<td data-th-text="${#numbers.formatDecimal(jars.size, 0, 'COMMA', 0, 'POINT')}"></td>
+						<td>
+							<a th:href="${jars.mirror1}" target="_blank" th:text="1" />
+							<a th:href="${jars.mirror2}" target="_blank" th:text="2" />
+							<a th:href="${jars.mirror3}" target="_blank" th:text="3" />
+						</td>
+					</tr>
+				</table>
+				<nav aria-label="Page navigation">
+					<ul class="pagination breadcrumb">
+						<li class="breadcrumb-item">
+							<div>
+								<span>&nbsp;&nbsp;</span>
+								<span th:text="#{TotalCount}" />:&nbsp;<span
+									th:text="${page.getTotalCount()}"></span>&nbsp;&nbsp;
+								<span th:text="#{TotalPageCount}" />:&nbsp;<span
+									th:text="${page.getTotalPageCount()}"></span>&nbsp;&nbsp;
+								<span th:text="#{CurrentPage}" />:&nbsp;<span
+									th:text="${page.getCurrentPage()}"></span>&nbsp;&nbsp;
+							</div>
+						</li>
+						<li class="breadcrumb-item">
+							<a th:href="@{/otherver/(jarUrl=${cnf_search.jar},currentPage=1,pageSize=${page.pageSize} )}"
+								aria-label="Previous">
+								<span aria-hidden="true">&laquo;<span th:text="#{firstPage}" /></span>
+							</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a th:href="@{/otherver/(jarUrl=${cnf_search.jar},currentPage=${page.currentPage-1},pageSize=${page.pageSize} )}"
+								aria-label="Previous">
+								<span aria-hidden="true">&laquo;<span th:text="#{prevPage}" /></span>
+							</a>
+						</li>
+
+						<li class="breadcrumb-item">
+							<a th:href="@{/otherver/(jarUrl=${cnf_search.jar},currentPage=${page.currentPage+1},pageSize=${page.pageSize} )}"
+								aria-label="Next">
+								<span aria-hidden="true"><span th:text="#{nextPage}" />&raquo;</span>
+							</a>
+						</li>
+
+						<li class="breadcrumb-item">
+							<a th:href="@{/otherver/(jarUrl=${cnf_search.jar},currentPage=${page.totalPageCount},pageSize=${page.pageSize} )}"
+								aria-label="Next">
+								<span aria-hidden="true"><span th:text="#{lastPage}" />&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</main>
+</body>
+
+</html>
