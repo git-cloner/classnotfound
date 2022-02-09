@@ -121,4 +121,20 @@ public class SyncClassInfoController {
         return response;
 	}
 	
+	@PostMapping
+	@RequestMapping(value = "getdeeproot")
+	public Response getdeeproot(@RequestBody JSONObject body) throws Exception {
+		String token = body.getString("token") ;
+		String root = body.getString("root") ;
+		if (!"Y2xhc3Nub3Rmb3VuZC5jb20uY24=".equals(token)) {
+			throw new Exception("bad token") ;
+		}
+		syncRootInfoService.FetchThirdRoot(root);
+		Response<Map<String, Object>> response = new Response<>();
+        Map<String, Object> result = new HashMap<>();
+        result.put("result","ok");
+        response.setData(result);
+        return response;
+	}
+	
 }

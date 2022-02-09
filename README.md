@@ -14,7 +14,9 @@ nohup java -Xss100m -Xmn350m -Xms1024m -Xmx1024m -jar classnotfound-1.0.0-SNAPSH
 ## step
 ### 1. sync first and second root path
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"token":"Y2xhc3Nub3Rmb3VuZC5jb20uY24="}' "http://127.0.0.1:8000/getroots
+curl -H "Content-Type: application/json" -X POST -d '{"token":"Y2xhc3Nub3Rmb3VuZC5jb20uY24="}' "http://127.0.0.1:8000/getroots"
+##For deep directories, special handling is required,such as:
+curl -H "Content-Type: application/json" -X POST -d '{"token":"Y2xhc3Nub3Rmb3VuZC5jb20uY24=","root":"https://repo1.maven.org/maven2/com/google/apis/"}' "http://127.0.0.1:8000/getdeeproot"
 ```
 ### 2. sync all jar path
 ```
