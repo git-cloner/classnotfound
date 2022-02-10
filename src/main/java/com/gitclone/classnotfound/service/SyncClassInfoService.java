@@ -154,7 +154,7 @@ public class SyncClassInfoService {
 		if (list.size()==0) {
 			return false ;
 		}
-		System.out.println("单条耗时：" + (System.currentTimeMillis() - startTime) + "ms");
+		System.out.println("----------------------\n单条耗时：" + (System.currentTimeMillis() - startTime) + "ms");
 		startTime = System.currentTimeMillis();
 		//fetch jar group
 		String jar = list.get(0).getJar() ;
@@ -218,7 +218,7 @@ public class SyncClassInfoService {
 			if (file.exists()) {
 				file.delete() ;
 			}
-			System.out.println(listClasses.size() + " classes") ;
+			System.out.println(listClasses.size() + " classes inserted") ;
 		}
 		else {			
 			 em.createQuery("update Cnf_jars set download_flag = 3 where jar like :jar")

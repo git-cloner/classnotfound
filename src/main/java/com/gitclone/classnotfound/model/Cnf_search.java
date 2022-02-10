@@ -6,6 +6,7 @@ public class Cnf_search {
 	private Integer classCount ;
 	private String jar ;
 	private Long findT ;
+	private String message ;
 
 	public String getClassName() {
 		return className;
@@ -46,5 +47,12 @@ public class Cnf_search {
 	public void setFindT(Long findT) {
 		this.findT = findT;
 	}
-	
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 }

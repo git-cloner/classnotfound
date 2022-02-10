@@ -30,14 +30,19 @@ public class FindJarController {
 	
 	@GetMapping("/home")
     public String homePage(Model model,String className, Integer currentPage,Integer pageSize) {
-		Long startTime = System.currentTimeMillis();
 		Page page = new Page() ;
+		Cnf_search cnf_search = new Cnf_search() ;
+		cnf_search.setClassName(className) ;
+		if (!this.checkParam(cnf_search)) {
+			model.addAttribute("cnf_search",cnf_search) ;
+			model.addAttribute("page", page);
+			return "home";
+		}
+		Long startTime = System.currentTimeMillis();
 		page.setCurrentPage(currentPage != null ? currentPage : 1 ) ;
 		page.setPageSize(pageSize != null ? pageSize : 10) ;		
 		findJarService.findJarByClassName(className, page);		
 		model.addAttribute("page", page);
-		Cnf_search cnf_search = new Cnf_search() ;
-		cnf_search.setClassName(className) ;
 		//
 		HashMap<String,Integer> map = statService.getJarClassCount() ;
 		cnf_search.setJarCount(map.get("cnf_jars")) ;
@@ -48,14 +53,35 @@ public class FindJarController {
         return "home";
     }
 	
+	private boolean checkParam(Cnf_search cnf_search){
+		if ((cnf_search.getClassName()==null) || ("".equals(cnf_search.getClassName()))) {
+			return true ;
+		}
+		String[] sl = cnf_search.getClassName().split("[.]") ;
+		if(sl.length<3) {
+			cnf_search.setMessage("classname is a.b.c ......");
+			return false ;
+		}
+		if(cnf_search.getClassName().length()<10) {
+			cnf_search.setMessage("classname's min length is 10");
+			return false ;
+		}
+		return true ;
+	}
+	
 	@PostMapping("/home")
 	public String submit(Model model,@ModelAttribute("cnf_search") Cnf_search cnf_search) {
-		Long startTime = System.currentTimeMillis();
 		if("".equals(cnf_search.getClassName())|| (cnf_search.getClassName() == null)) {
 			cnf_search.setClassName("org.springframework.stereotype.Service");
 		}
+		Page page = new Page() ;
+		if (!this.checkParam(cnf_search)) {
+			model.addAttribute("cnf_search",cnf_search) ;
+			model.addAttribute("page", page);
+			return "home";
+		}
+		Long startTime = System.currentTimeMillis();
 		String className = cnf_search.getClassName() ;
-		Page page = new Page() ;	
 		findJarService.findJarByClassName(className, page);		
 		model.addAttribute("page", page);
 		//

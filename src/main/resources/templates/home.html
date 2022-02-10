@@ -57,6 +57,9 @@
 				<div class="col-md-1"></div>
 			</div>
 			<div class="row" style="height:20px">
+				<div class="mx-auto">
+					<span th:text="${cnf_search.message}" th:style="'font-size:20px;color:red'"/>
+				</div>
 			</div>
 			<div class="row" th:style="'display:' + @{(${page.getTotalCount()} ==0 ? 'none' : 'inline-block')} + ''">
 				<table class="table">
