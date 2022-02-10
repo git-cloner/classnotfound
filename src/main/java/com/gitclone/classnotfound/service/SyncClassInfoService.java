@@ -68,9 +68,15 @@ public class SyncClassInfoService {
 			FileOutputStream fs = new FileOutputStream(fileName);
 			byte[] buffer = new byte[65536]; //64k 
 			int length = conn.getContentLength() ;
+			System.out.print("  " + Math.round((length + 0.0) / 1024) + "k ") ;
+			int x = 0 ;
 			while ((byteread = inStream.read(buffer)) != -1) {
 				bytesum += byteread;
 				fs.write(buffer, 0, byteread);
+				x++ ;
+				if (x % 6 == 0) {
+					System.out.print(".") ;
+				}
 				//
 				/*System.out.println(jarUrl + "\n" + 
 						Math.round((bytesum + 0.0) / 1024) + "k of " +
@@ -190,7 +196,7 @@ public class SyncClassInfoService {
 		//choice first jar and download
 		System.out.println("download: " + downloadJar) ;
 		String fileName = downLoadJar(downloadJar);
-		System.out.println("下载耗时：" + (System.currentTimeMillis() - startTime) + "ms");
+		System.out.println("\n下载耗时：" + (System.currentTimeMillis() - startTime) + "ms");
 		startTime = System.currentTimeMillis();
 		if (!fileName.equals("")) {
 			List<String> listClasses = getClassByJar(fileName) ;
