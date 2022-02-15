@@ -50,6 +50,7 @@ CREATE TABLE `cnf_findjars` (
   `mirror1` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `mirror2` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `mirror3` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `pom_name` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 

@@ -70,6 +70,7 @@
 						<th th:text=#{size}></th>
 						<th th:text=#{mirror}></th>
 						<th th:text=#{otherver}></th>
+						<th th:text=#{pomname}></th>
 					</tr>
 					<tr data-th-each="jars :${page.getDatas()}">
 						<td data-th-text="${jars.class_name}">...</td>
@@ -86,6 +87,9 @@
 						<td>
 							<a th:href="@{/otherver/(jarUrl=${jars.jar},currentPage=1,pageSize=${page.pageSize} )}"
 								target="_blank" th:text="oldver" />
+						</td>
+						<td>
+							<a th:href="${jars.pom_name}" target="_blank" th:text="pom" />
 						</td>
 					</tr>
 				</table>
@@ -141,6 +145,7 @@
 					<strong>
 						<span th:text="${#numbers.formatDecimal(cnf_search.jarCount, 0, 'COMMA', 0, 'POINT')}" th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;jars,
 						<span th:text="${#numbers.formatDecimal(cnf_search.classCount, 0, 'COMMA', 0, 'POINT')}" th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;classes
+						&nbsp;&nbsp;<a href="https://github.com/git-cloner/classnotfound" target="_blank" th:text="github"></a>	
 					</strong>
 				</div>
 			</div>

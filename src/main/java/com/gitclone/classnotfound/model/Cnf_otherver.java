@@ -15,6 +15,7 @@ public class Cnf_otherver {
 	private String mirror1 ;
 	private String mirror2 ;
 	private String mirror3 ;
+	private String pom_name ;
 	
 	@Id
 	public long getId() {
@@ -65,5 +66,10 @@ public class Cnf_otherver {
 	public void setFile_name(String file_name) {
 		this.file_name = file_name;
 	}
-	
+	public String getPom_name() {
+		return pom_name;
+	}
+	public void setPom_name(String pom_name) {
+		this.pom_name = pom_name;
+	}
 }

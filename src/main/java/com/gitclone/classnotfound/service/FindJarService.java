@@ -49,7 +49,7 @@ public class FindJarService {
 		int limit = page.getPageSize();
 		List<Cnf_findjars> listResult = em
 				.createNativeQuery("select a.id ,b.jar, a.class_name ,b.upt_date,round(b.size / 1024,0) size,"
-						+ "'' file_name,'' mirror1,'' mirror2,'' mirror3 "
+						+ "'' file_name,'' mirror1,'' mirror2,'' mirror3,'' pom_name "
 						+ "from cnf_classes a,cnf_jars b "
 						+ "where a.jar_hash = b.jar_hash and a.class_name like :class_name and a.class_name not like '%$%' "
 						+ "order by b.upt_date desc limit " + offset + "," + limit, Cnf_findjars.class)
@@ -58,6 +58,7 @@ public class FindJarService {
 		for(Cnf_findjars jar : listResult) {
 			String url = jar.getJar() ;
 			jar.setFile_name(url.substring(url.lastIndexOf('/')+1)) ;
+			jar.setPom_name(url.replaceAll("-jar-with-dependencies", "").replaceAll(".jar", ".pom")) ;
 			jar.setMirror1(BaseUtils.mirror[1] + url.replaceAll(baseurl, "")) ;
 			jar.setMirror2(BaseUtils.mirror[2] + url.replaceAll(baseurl, "")) ;
 			jar.setMirror3(BaseUtils.mirror[3] + url.replaceAll(baseurl, "")) ;
@@ -88,7 +89,7 @@ public class FindJarService {
 		int offset = (page.getCurrentPage() - 1) * page.getPageSize();
 		int limit = page.getPageSize();
 		List<Cnf_otherver> listResult = em
-				.createNativeQuery("select a.id ,a.jar, a.upt_date,round(a.size / 1024,0) size,'' file_name,'' mirror1,'' mirror2,'' mirror3 "
+				.createNativeQuery("select a.id ,a.jar, a.upt_date,round(a.size / 1024,0) size,'' file_name,'' mirror1,'' mirror2,'' mirror3,'' pom_name "
 						+ "from  cnf_jars a where a.jar like :jar "
 						+ "order by a.upt_date desc limit " + offset + "," + limit, Cnf_otherver.class)
 				.setParameter("jar", jarGroup)
@@ -97,6 +98,7 @@ public class FindJarService {
 			String url = jar.getJar() ;
 			//jar.setFile_name(url.substring(url.lastIndexOf('/')+1)) ;
 			jar.setFile_name(url.replaceAll(baseurl, "")) ;
+			jar.setPom_name(url.replaceAll("-jar-with-dependencies", "").replaceAll(".jar", ".pom")) ;
 			jar.setMirror1(BaseUtils.mirror[1] + url.replaceAll(baseurl, "")) ;
 			jar.setMirror2(BaseUtils.mirror[2] + url.replaceAll(baseurl, "")) ;
 			jar.setMirror3(BaseUtils.mirror[3] + url.replaceAll(baseurl, "")) ;
