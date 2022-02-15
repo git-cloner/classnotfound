@@ -95,7 +95,8 @@ public class FindJarService {
 				.getResultList();
 		for(Cnf_otherver jar : listResult) {
 			String url = jar.getJar() ;
-			jar.setFile_name(url.substring(url.lastIndexOf('/')+1)) ;
+			//jar.setFile_name(url.substring(url.lastIndexOf('/')+1)) ;
+			jar.setFile_name(url.replaceAll(baseurl, "")) ;
 			jar.setMirror1(BaseUtils.mirror[1] + url.replaceAll(baseurl, "")) ;
 			jar.setMirror2(BaseUtils.mirror[2] + url.replaceAll(baseurl, "")) ;
 			jar.setMirror3(BaseUtils.mirror[3] + url.replaceAll(baseurl, "")) ;

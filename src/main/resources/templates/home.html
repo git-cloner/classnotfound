@@ -139,12 +139,8 @@
 			<div class="row">
 				<div class="mx-auto">
 					<strong>
-						<span
-							th:text="#{syncing}"></span>&nbsp;&nbsp;
-						<span
-							th:text="${#numbers.formatDecimal(cnf_search.jarCount, 0, 'COMMA', 0, 'POINT')}"></span>&nbsp;&nbsp;jars,
-						<span
-							th:text="${#numbers.formatDecimal(cnf_search.classCount, 0, 'COMMA', 0, 'POINT')}"></span>&nbsp;&nbsp;classes
+						<span th:text="${#numbers.formatDecimal(cnf_search.jarCount, 0, 'COMMA', 0, 'POINT')}" th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;jars,
+						<span th:text="${#numbers.formatDecimal(cnf_search.classCount, 0, 'COMMA', 0, 'POINT')}" th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;classes
 					</strong>
 				</div>
 			</div>
