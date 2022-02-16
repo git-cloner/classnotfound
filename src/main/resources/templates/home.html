@@ -28,8 +28,6 @@
 					</svg>
 					<strong>&nbsp;&nbsp;<span th:text=#{classnotfound}></span></strong>
 				</a>
-				<a href="https://gitclone.com" class="navbar-brand d-flex align-items-center"
-					target="_blank" th:text=#{gitclone.com}></a>
 			</div>
 		</div>
 	</header>
@@ -48,8 +46,7 @@
 						method="POST">
 						<div class="form-group">
 							<input type="text" class="form-control input-large" id="className"
-								th:placeholder="org.springframework.stereotype.Service" th:field="*{className}"
-								placeholder=".input-large">
+								placeholder="jar or class:fastjosn,org.springframework.stereotype.Service..." th:field="*{className}">
 							<button type="submit" class="btn btn-outline-primary" th:text=#{search} style="width:100px"></button>
 						</div>
 					</form>
@@ -145,8 +142,14 @@
 					<strong>
 						<span th:text="${#numbers.formatDecimal(cnf_search.jarCount, 0, 'COMMA', 0, 'POINT')}" th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;jars,
 						<span th:text="${#numbers.formatDecimal(cnf_search.classCount, 0, 'COMMA', 0, 'POINT')}" th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;classes
-						&nbsp;&nbsp;<a href="https://github.com/git-cloner/classnotfound" target="_blank" th:text="github"></a>	
 					</strong>
+				</div>
+			</div>
+			<div class="row">
+				<div class="mx-auto">
+					<a href="https://github.com/git-cloner/classnotfound" target="_blank" th:text="sourcecode"></a>|
+					<a href="https://gitclone.com" target="_blank" th:text="gitclone.com"></a>|
+					<a href="https://opendao.cn" target="_blank" th:text="opendao.cn"></a>
 				</div>
 			</div>
 			<div class="row">

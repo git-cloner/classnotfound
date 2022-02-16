@@ -54,9 +54,10 @@ public class FindJarController {
     }
 	
 	private boolean checkParam(Cnf_search cnf_search){
-		if ((cnf_search.getClassName()==null) || ("".equals(cnf_search.getClassName()))) {
+		/*if ((cnf_search.getClassName()==null) || ("".equals(cnf_search.getClassName()))) {
 			return true ;
 		}
+		cnf_search.setClassName(cnf_search.getClassName().replaceAll("/", ".")) ;
 		String[] sl = cnf_search.getClassName().split("[.]") ;
 		if(sl.length<3) {
 			cnf_search.setMessage("classname is a.b.c ......");
@@ -65,7 +66,7 @@ public class FindJarController {
 		if(cnf_search.getClassName().length()<10) {
 			cnf_search.setMessage("classname's min length is 10");
 			return false ;
-		}
+		}*/
 		return true ;
 	}
 	

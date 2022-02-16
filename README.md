@@ -61,6 +61,7 @@ CREATE TABLE `cnf_jars` (
   `upt_date` datetime NOT NULL,
   `size` bigint DEFAULT NULL,
   `download_flag` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `short_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_cnf_jar_hash` (`jar_hash`) USING BTREE,
   KEY `idx_cnf_jars_jar` (`jar`)
