@@ -26,13 +26,13 @@
 
 ##### 1. Get jar package path recursively
 
- 	about https://repo1.maven.org/maven2/ In this hierarchical and variable depth directory structure, recursion is used to obtain the last level jar. However, the deeper the recursion is, the larger the stack space is required and the worse the performance is. Therefore, in the specific implementation, the first three levels of directories are stored in a circular manner, and then in the third level directory (such as https://repo1.maven.org/maven2/abbot/costello/ ）Based on, recursively find jars and ignore auxiliary jars such as test and javadoc, so the number of jars to download will be greatly reduced.
+​    For the hierarchical and indeterminate directory structure of https://repo1.maven.org/maven2/, the method of obtaining the last level of jars requires recursion, but the deeper the recursion, the larger the stack space required , the worse the performance, so in the specific implementation, the first three-level directory is stored in a circular manner, and then the third-level directory (such as https://repo1.maven.org/maven2/abbot/costello/) is used as Basically, recursively search for jars, and ignore auxiliary jars such as test and javadoc, so that the number of jars to be downloaded will be greatly reduced.
 
 ##### 2. Download the jar package and parse it
 
- 	Download the jars one by one according to the path of the jar package, parse the classname inside, and delete the jars after parsing. When downloading jars, you don't need to download all jars, just download the latest version. In this way, you can find the latest jar by class name. If you need the download link of previous version, you can directly extract the version number from the database according to the path name of jar and fuzzy search.
+​    Download the jars one by one according to the path of the jar package, parse the classname inside, and delete the jars after parsing. When downloading jars, you do not need to download all the jars, just download the latest version, so that the latest jar can be found by the class name. If you need the download link of the previous version, you can directly extract the version number from the database according to the path name of the jar and then look for it fuzzy.
 
 ##### 3. Mirror pool
 
- 	In order to improve the download speed, you need to download jars from multiple images at the same time. The available images include Maven official image, 163 image and Alibaba cloud image. When downloading, randomly select files from the image pool to download. Jar packages are mainly concentrated in com, net, io, org and other paths. When downloading, you need to download them step by step in alphabetical order.
+​    In order to improve the download speed, you need to download jars from multiple mirrors at the same time. The available mirrors include maven official mirror, 163 mirror and Alibaba Cloud mirror. When downloading, files are randomly selected from the mirror pool to download. The jar package is mainly concentrated in com, net, io, org and other paths, and needs to be downloaded step by step in alphabetical order.
 
