@@ -2,6 +2,8 @@ package com.gitclone.classnotfound.controller;
 
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.gitclone.classnotfound.model.Cnf_search;
 import com.gitclone.classnotfound.service.FindJarService;
 import com.gitclone.classnotfound.service.StatService;
+import com.gitclone.classnotfound.utils.BaseUtils;
 import com.gitclone.classnotfound.utils.Page;
 
 @Controller
@@ -22,6 +25,9 @@ public class FindJarController {
 	
 	@Autowired
 	private StatService statService ;
+	
+	@Autowired
+    HttpServletRequest req;
 	
 	@GetMapping("/")
     public String rootPage(Model model,String className, Integer currentPage,Integer pageSize) {
@@ -47,9 +53,12 @@ public class FindJarController {
 		HashMap<String,Integer> map = statService.getJarClassCount() ;
 		cnf_search.setJarCount(map.get("cnf_jars")) ;
 		cnf_search.setClassCount(map.get("cnf_classes")) ;
-		cnf_search.setFindT((System.currentTimeMillis() - startTime)) ;
-		//
+		long useTime = System.currentTimeMillis() - startTime ;
+		cnf_search.setFindT(useTime) ;
 		model.addAttribute("cnf_search",cnf_search) ;
+		//add visit rec
+		this.saveVisitRec(className, useTime) ;
+		//
         return "home";
     }
 	
@@ -68,6 +77,11 @@ public class FindJarController {
 			return false ;
 		}*/
 		return true ;
+	}
+	
+	private void saveVisitRec(String visit_content,long userTime) {
+		String ip = BaseUtils.getIP(req) ; 
+		statService.saveVisitRec(visit_content, ip, userTime);
 	}
 	
 	@PostMapping("/home")
@@ -89,8 +103,12 @@ public class FindJarController {
 		HashMap<String,Integer> map = statService.getJarClassCount() ;
 		cnf_search.setJarCount(map.get("cnf_jars")) ;
 		cnf_search.setClassCount(map.get("cnf_classes")) ;
-		cnf_search.setFindT((System.currentTimeMillis() - startTime)) ;
+		long useTime = System.currentTimeMillis() - startTime ;
+		cnf_search.setFindT(useTime) ;
 		model.addAttribute("cnf_search",cnf_search) ;
+		//add visit rec
+		this.saveVisitRec(className, useTime) ;
+		//
 		return "home";
 	}
 	

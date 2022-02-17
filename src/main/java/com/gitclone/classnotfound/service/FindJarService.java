@@ -1,5 +1,6 @@
 package com.gitclone.classnotfound.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,10 +8,13 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gitclone.classnotfound.model.Cnf_findjars;
 import com.gitclone.classnotfound.model.Cnf_otherver;
+import com.gitclone.classnotfound.model.Cnf_visits;
 import com.gitclone.classnotfound.utils.BaseUtils;
 import com.gitclone.classnotfound.utils.Page;
 
@@ -156,5 +160,4 @@ public class FindJarService {
 		}
 		page.setDatas(listResult);
 	}
-
 }
