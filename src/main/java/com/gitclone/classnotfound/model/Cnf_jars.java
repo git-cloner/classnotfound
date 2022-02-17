@@ -17,6 +17,7 @@ public class Cnf_jars {
 	private Date upt_date  ;
 	private long size ;
 	private String download_flag ;
+	private String short_name ;
 	
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Id
@@ -55,5 +56,11 @@ public class Cnf_jars {
 	}
 	public void setDownload_flag(String download_flag) {
 		this.download_flag = download_flag;
-	}	
+	}
+	public String getShort_name() {
+		return short_name;
+	}
+	public void setShort_name(String short_name) {
+		this.short_name = short_name;
+	}
 }

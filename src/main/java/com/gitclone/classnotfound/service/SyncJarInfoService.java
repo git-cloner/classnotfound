@@ -113,6 +113,7 @@ public class SyncJarInfoService {
 					cnf_jars.setJar_hash(jar_hash);
 					cnf_jars.setUpt_date(jarInfo.getUpt_date());
 					cnf_jars.setSize(jarInfo.getSize());
+					cnf_jars.setShort_name(jarInfo.getUrl().substring(jarInfo.getUrl().lastIndexOf('/')+1));
 					em.persist(cnf_jars);
 				}
 			}

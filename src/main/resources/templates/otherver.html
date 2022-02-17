@@ -44,6 +44,7 @@
 						<th th:text=#{modifyDate}></th>
 						<th th:text=#{size}></th>
 						<th th:text=#{mirror}></th>
+						<th th:text=#{pomname}></th>
 					</tr>
 					<tr data-th-each="jars :${page.getDatas()}">
 						<td>
@@ -55,6 +56,9 @@
 							<a th:href="${jars.mirror1}" target="_blank" th:text="1" />
 							<a th:href="${jars.mirror2}" target="_blank" th:text="2" />
 							<a th:href="${jars.mirror3}" target="_blank" th:text="3" />
+						</td>
+						<td>
+							<a th:href="${jars.pom_name}" target="_blank" th:text="pom" />
 						</td>
 					</tr>
 				</table>

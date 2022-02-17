@@ -17,6 +17,7 @@ public class Cnf_findjars {
 	private String mirror1 ;
 	private String mirror2 ;
 	private String mirror3 ;
+	private String pom_name ;
 	
 	
 	@Id
@@ -74,4 +75,10 @@ public class Cnf_findjars {
 	public void setMirror3(String mirror3) {
 		this.mirror3 = mirror3;
 	}
+	public String getPom_name() {
+		return pom_name;
+	}
+	public void setPom_name(String pom_name) {
+		this.pom_name = pom_name;
+	}	
 }
