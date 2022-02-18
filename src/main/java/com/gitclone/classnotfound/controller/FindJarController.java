@@ -76,11 +76,18 @@ public class FindJarController {
 			cnf_search.setMessage("classname's min length is 10");
 			return false ;
 		}*/
+		if ((cnf_search.getClassName()==null) || ("".equals(cnf_search.getClassName()))) {
+			return true ;
+		}
+		cnf_search.setClassName(cnf_search.getClassName().replaceAll("/", ".")) ;
 		return true ;
 	}
 	
 	private void saveVisitRec(String visit_content,long userTime) {
 		String ip = BaseUtils.getIP(req) ; 
+		if("61.133.217.141".equals(ip) || "127.0.0.1".equals(ip)) {
+			return ;
+		}
 		statService.saveVisitRec(visit_content, ip, userTime);
 	}
 	
@@ -114,6 +121,7 @@ public class FindJarController {
 	
 	@GetMapping("/otherver")
     public String Otherver(Model model,String jarUrl, Integer currentPage,Integer pageSize) {
+		Long startTime = System.currentTimeMillis();
 		Page page = new Page() ;
 		page.setCurrentPage(currentPage != null ? currentPage : 1 ) ;
 		page.setPageSize(pageSize != null ? pageSize : 10) ;		
@@ -122,6 +130,10 @@ public class FindJarController {
 		Cnf_search cnf_search = new Cnf_search() ;
 		cnf_search.setJar(jarUrl) ;
 		model.addAttribute("cnf_search",cnf_search) ;
+		//add visit rec
+		long useTime = System.currentTimeMillis() - startTime ;
+		this.saveVisitRec(jarUrl, useTime) ;
+		//
 		return "otherver";
     }
 }
