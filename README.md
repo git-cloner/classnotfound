@@ -88,6 +88,14 @@ CREATE TABLE `cnf_roots` (
   KEY `idx_cnf_roots` (`root`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `cnf_visits` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `visit_content` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0',
+  `visit_time` datetime DEFAULT NULL,
+  `use_time` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 ```
 ## jar install
 ### jre for ubuntu:
