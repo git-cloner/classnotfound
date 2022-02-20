@@ -21,7 +21,7 @@
 		<div class="navbar navbar-dark bg-dark shadow-sm navbar-fixed-top">
 			<div class="container d-flex justify-content-between">
 				<a href="https://classnotfound.com.cn/" class="navbar-brand d-flex align-items-center">
-					<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
 						class="bi bi-code-square" viewBox="0 0 16 16">
 						<path
 							d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
@@ -29,6 +29,15 @@
 							d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z" />
 					</svg>
 					<strong>&nbsp;&nbsp;<span th:text=#{classnotfound}></span></strong>
+				</a>
+				<a href="https://github.com/git-cloner/classnotfound" class="navbar-brand d-flex align-items-center"
+					target="_blank">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+						class="bi bi-github" viewBox="0 0 16 16">
+						<path
+							d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+					</svg>
+					<strong>&nbsp;&nbsp;<span th:text="Github"></span></strong>
 				</a>
 			</div>
 		</div>
@@ -58,7 +67,7 @@
 				<div class="col-md-1"></div>
 			</div>
 			<div th:style="'display:' + @{(${page.getTotalCount()} >0 ? 'none' : 'inline-block')} + ''">
-				<div class="row" style="height:40px form-inline">
+				<div class="row" style="height:40px;margin-top:10px">
 					<div class="col-md-4"></div>
 					<div class="col-md-8">
 						<span th:text="#{desc}" th:style="'font-size:16px'" />
@@ -156,8 +165,6 @@
 			</div>
 			<div class="row">
 				<div class="mx-auto">
-					<a href="https://github.com/git-cloner/classnotfound" target="_blank" th:text="sourcecode"
-						th:style="'font-size:18px'"></a>&nbsp;|&nbsp;
 					<a href="https://gitclone.com" target="_blank" th:text="gitclone.com"
 						th:style="'font-size:18px'"></a>&nbsp;|&nbsp;
 					<a href="https://opendao.cn" target="_blank" th:text="opendao.cn" th:style="'font-size:18px'"></a>
