@@ -78,8 +78,11 @@ public class SyncJarInfoService {
 						&& (!link.attr("href").contains("\""))
 						&& (!link.attr("href").trim().equals(""))) {
 					LinkMap.put(linkHref, false);
-				} else if (linkHref.endsWith(".jar") && (!linkHref.endsWith("-javadoc.jar"))
-						&& (!linkHref.endsWith("-sources.jar"))) {
+				} else if (linkHref.endsWith(".jar") 
+						&& (!linkHref.endsWith("-javadoc.jar"))
+						&& (!linkHref.endsWith("-sources.jar"))
+						&& (!linkHref.endsWith("-tests-sources.jar"))
+						&& (!linkHref.endsWith("-with-dependencies.jar"))) {
 					if (link.nextSibling() != null) {
 						JarInfo jarInfo = new JarInfo();
 						jarInfo.setUrl(linkHref);

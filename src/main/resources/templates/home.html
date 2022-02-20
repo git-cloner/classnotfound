@@ -6,7 +6,8 @@
 	<title>classnotfound.com.cn</title>
 	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="keywords" content="ClassNotFoundException,NoClassDefFoundError,findjar">
-	<meta name="description" content="findjar by classname,中国版的findjar.com 按包名类名查找Jar java搜索类所在的包 Find a jar file given the class name ClassNotFoundException NoClassDefFoundError">
+	<meta name="description"
+		content="findjar by classname,中国版的findjar.com 按包名类名查找Jar java搜索类所在的包 Find a jar file given the class name ClassNotFoundException NoClassDefFoundError">
 	<meta name="author" content="gitclone,gitclone@126.com">
 	<meta name="robots" content="all">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
@@ -34,10 +35,10 @@
 	</header>
 	<main role="main">
 		<div class="container">
-			<div class="row" style="height:150px">
+			<div class="row" style="height:100px">
 				<div class="mx-auto form-inline">
 					<img src="/img/logo.png" class="img-rounded">
-					<h3>Class Not Found</h3>
+					<h3>classnotfound</h3>
 				</div>
 			</div>
 			<div class="row">
@@ -47,16 +48,21 @@
 						method="POST">
 						<div class="form-group">
 							<input type="text" class="form-control input-large" id="className"
-								placeholder="jar or class:fastjosn,org.springframework.stereotype.Service..." th:field="*{className}">
-							<button type="submit" class="btn btn-outline-primary" th:text=#{search} style="width:100px"></button>
+								placeholder="jar or class:fastjosn,org.springframework.stereotype.Service..."
+								th:field="*{className}">
+							<button type="submit" class="btn btn-outline-primary" th:text=#{search}
+								style="width:100px"></button>
 						</div>
 					</form>
 				</div>
 				<div class="col-md-1"></div>
 			</div>
-			<div class="row" style="height:20px">
-				<div class="mx-auto">
-					<span th:text="${cnf_search.message}" th:style="'font-size:20px;color:red'"/>
+			<div th:style="'display:' + @{(${page.getTotalCount()} >0 ? 'none' : 'inline-block')} + ''">
+				<div class="row" style="height:40px form-inline">
+					<div class="col-md-4"></div>
+					<div class="col-md-8">
+						<span th:text="#{desc}" th:style="'font-size:16px'" />
+					</div>
 				</div>
 			</div>
 			<div class="row" th:style="'display:' + @{(${page.getTotalCount()} ==0 ? 'none' : 'inline-block')} + ''">
@@ -96,7 +102,7 @@
 						<li class="breadcrumb-item">
 							<div>
 								<span>&nbsp;&nbsp;</span>
-								<span th:text="${cnf_search.findT}"/>ms&nbsp;&nbsp;
+								<span th:text="${cnf_search.findT}" />ms&nbsp;&nbsp;
 								<span th:text="#{TotalCount}" />:&nbsp;<span
 									th:text="${page.getTotalCount()}"></span>&nbsp;&nbsp;
 								<span th:text="#{TotalPageCount}" />:&nbsp;<span
@@ -106,7 +112,7 @@
 							</div>
 						</li>
 						<li class="breadcrumb-item">
-							<a th:href="@{/home/(className=${cnf_search.className},currentPage=1,pageSize=${page.pageSize} )}" 
+							<a th:href="@{/home/(className=${cnf_search.className},currentPage=1,pageSize=${page.pageSize} )}"
 								aria-label="Previous">
 								<span aria-hidden="true">&laquo;<span th:text="#{firstPage}" /></span>
 							</a>
@@ -119,14 +125,14 @@
 						</li>
 
 						<li class="breadcrumb-item">
-							<a th:href="@{/home/(className=${cnf_search.className},currentPage=${page.currentPage+1},pageSize=${page.pageSize} )}" 
+							<a th:href="@{/home/(className=${cnf_search.className},currentPage=${page.currentPage+1},pageSize=${page.pageSize} )}"
 								aria-label="Next">
 								<span aria-hidden="true"><span th:text="#{nextPage}" />&raquo;</span>
 							</a>
 						</li>
 
 						<li class="breadcrumb-item">
-							<a th:href="@{/home/(className=${cnf_search.className},currentPage=${page.totalPageCount},pageSize=${page.pageSize} )}" 
+							<a th:href="@{/home/(className=${cnf_search.className},currentPage=${page.totalPageCount},pageSize=${page.pageSize} )}"
 								aria-label="Next">
 								<span aria-hidden="true"><span th:text="#{lastPage}" />&raquo;</span>
 							</a>
@@ -141,15 +147,19 @@
 			<div class="row">
 				<div class="mx-auto">
 					<strong>
-						<span th:text="${#numbers.formatDecimal(cnf_search.jarCount, 0, 'COMMA', 0, 'POINT')}" th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;jars,
-						<span th:text="${#numbers.formatDecimal(cnf_search.classCount, 0, 'COMMA', 0, 'POINT')}" th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;classes
+						<span th:text="${#numbers.formatDecimal(cnf_search.jarCount, 0, 'COMMA', 0, 'POINT')}"
+							th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;jars,
+						<span th:text="${#numbers.formatDecimal(cnf_search.classCount, 0, 'COMMA', 0, 'POINT')}"
+							th:style="'font-size:15px;color:red'"></span>&nbsp;&nbsp;classes
 					</strong>
 				</div>
 			</div>
 			<div class="row">
 				<div class="mx-auto">
-					<a href="https://github.com/git-cloner/classnotfound" target="_blank" th:text="sourcecode" th:style="'font-size:18px'"></a>&nbsp;|&nbsp;
-					<a href="https://gitclone.com" target="_blank" th:text="gitclone.com" th:style="'font-size:18px'"></a>&nbsp;|&nbsp;
+					<a href="https://github.com/git-cloner/classnotfound" target="_blank" th:text="sourcecode"
+						th:style="'font-size:18px'"></a>&nbsp;|&nbsp;
+					<a href="https://gitclone.com" target="_blank" th:text="gitclone.com"
+						th:style="'font-size:18px'"></a>&nbsp;|&nbsp;
 					<a href="https://opendao.cn" target="_blank" th:text="opendao.cn" th:style="'font-size:18px'"></a>
 				</div>
 			</div>
