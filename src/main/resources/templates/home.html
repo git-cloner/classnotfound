@@ -73,6 +73,12 @@
 						<span th:text="#{desc}" th:style="'font-size:16px'" />
 					</div>
 				</div>
+				<div class="row" style="height:30px">
+					<div class="col-md-6"></div>
+					<div class="col-md-6">
+						<span th:text="${cnf_search.message}" th:style="'font-size:16px;color:red;margin-top:20px'" />
+					</div>
+				</div>
 			</div>
 			<div class="row" th:style="'display:' + @{(${page.getTotalCount()} ==0 ? 'none' : 'inline-block')} + ''">
 				<table class="table">
@@ -166,10 +172,10 @@
 			</div>
 			<div class="row">
 				<div class="mx-auto">
-				<img src="/img/gitclone.png" class="img-rounded">
+					<img src="/img/gitclone.png" class="img-rounded">
 					<a href="https://gitclone.com" target="_blank" th:text="gitclone.com"
 						th:style="'font-size:18px'"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<img src="/img/opendao.png" class="img-rounded">
+					<img src="/img/opendao.png" class="img-rounded">
 					<a href="https://opendao.cn" target="_blank" th:text="opendao.cn" th:style="'font-size:18px'"></a>
 				</div>
 			</div>
