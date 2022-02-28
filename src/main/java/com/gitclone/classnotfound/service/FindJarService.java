@@ -127,9 +127,19 @@ public class FindJarService {
 			page.setDatas(null);
 			return ;
 		}
+		String cond = "" ;
+		String[] strJarName = jarName.trim().split(" ") ;
+		for(int i=0;i<strJarName.length;i++) {
+			if (cond.equals("")) {
+				cond = "( short_name like '" + strJarName[i] + "%' " ;
+			}
+			else {
+				cond = cond + " or short_name like '" + strJarName[i] + "%' " ;
+			}
+		}
+		cond = cond + ")" ;
 		List list = em.createNativeQuery("select count(*) from cnf_jars a "
-				+ "where download_flag = 2 and short_name like :shortName limit 200")
-				.setParameter("shortName", jarName + "%")
+				+ "where download_flag = 2 and " + cond + " limit 200")
 				.getResultList();
 		if (list.size() > 0) {
 			String str= list.get(0).toString();
@@ -142,9 +152,8 @@ public class FindJarService {
 				.createNativeQuery("select a.id ,a.jar, a.jar class_name ,a.upt_date,round(a.size / 1024,0) size,"
 						+ "a.short_name file_name,'' mirror1,'' mirror2,'' mirror3,'' pom_name "
 						+ "from cnf_jars a "
-						+ "where download_flag = 2 and short_name like :shortName "
+						+ "where download_flag = 2 and  " + cond  
 						+ "order by a.upt_date desc limit " + offset + "," + limit, Cnf_findjars.class)
-				.setParameter("shortName", jarName + "%")
 				.getResultList();
 		for(Cnf_findjars jar : listResult) {
 			String url = jar.getJar() ;
