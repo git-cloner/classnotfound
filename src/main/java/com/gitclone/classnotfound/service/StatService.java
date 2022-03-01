@@ -46,7 +46,7 @@ public class StatService {
 	private void getJarClassCountFromSysTable(HashMap<String, Integer> map) {
 		List<Object[]> list = em.createNativeQuery(
 				"select table_name,table_rows "
-				+ "from information_schema.tables "
+				+ "from cnf_tables "
 				+ "where table_name in ('cnf_classes','cnf_jars')").getResultList() ;
 		for(Object[] objs : list) {
 			map.put(objs[0].toString(), Integer.valueOf(objs[1].toString())) ;
