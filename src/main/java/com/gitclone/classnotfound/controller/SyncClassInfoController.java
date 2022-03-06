@@ -137,4 +137,27 @@ public class SyncClassInfoController {
         return response;
 	}
 	
+	@PostMapping
+	@RequestMapping(value = "parsepoms")
+	public Response parsePoms(@RequestBody JSONObject body) throws Exception {
+		String token = body.getString("token") ;
+		if (!"Y2xhc3Nub3Rmb3VuZC5jb20uY24=".equals(token)) {
+			throw new Exception("bad token") ;
+		}
+		List<Long> list = syncJarInfoService.getAllSyncPomsId();
+		int l = list.size() ;
+		int i = 0 ;
+		for(Long id : list) {
+			syncJarInfoService.syncJarsPom(id);
+			i++ ;
+			System.out.println("total: " + l + " progress: " + i) ;
+		}
+
+		Response<Map<String, Object>> response = new Response<>();
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", l);
+        response.setData(result);
+        return response;
+	}
+	
 }

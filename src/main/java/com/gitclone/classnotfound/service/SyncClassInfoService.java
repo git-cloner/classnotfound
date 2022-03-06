@@ -17,6 +17,7 @@ import java.util.jar.JarFile;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gitclone.classnotfound.model.Cnf_classes;
 import com.gitclone.classnotfound.model.Cnf_jars;
+import com.gitclone.classnotfound.model.Cnf_pomattr;
 import com.gitclone.classnotfound.utils.BaseUtils;
 
 @Service
@@ -34,6 +36,9 @@ public class SyncClassInfoService {
 	
 	@Value("${repo.baseurl}")
 	private String baseurl;
+	
+	@Autowired
+	private SyncJarInfoService syncJarInfoService;
 	
 	public String downLoadJar(String jarUrl) {
 		Random random = new Random() ;
@@ -177,6 +182,15 @@ public class SyncClassInfoService {
 		for(Cnf_jars cnf_jar : listJar) {
 			if (cnf_jar.getJar().equals(downloadJar)) {
 				cnf_jar.setDownload_flag("2") ;
+				String pom = cnf_jar.getJar().replaceAll(".jar", ".pom") ;
+				Cnf_pomattr cnf_pomattr = syncJarInfoService.parsePom(pom) ;
+				if (cnf_pomattr!=null) {
+					cnf_jar.setArtifact_id(cnf_pomattr.getArtifactId());
+					cnf_jar.setGroup_id(cnf_pomattr.getGroupId());
+					cnf_jar.setUrl(cnf_pomattr.getUrl());
+					cnf_jar.setName(cnf_pomattr.getName());
+					cnf_jar.setDescription(cnf_pomattr.getDescription());
+				}
 			}
 			else {
 				cnf_jar.setDownload_flag("1") ;

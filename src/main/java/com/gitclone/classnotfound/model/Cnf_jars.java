@@ -18,6 +18,11 @@ public class Cnf_jars {
 	private long size ;
 	private String download_flag ;
 	private String short_name ;
+	private String group_id ;
+	private String artifact_id ;
+	private String url ;
+	private String name ;
+	private String description ;
 	
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Id
@@ -63,4 +68,35 @@ public class Cnf_jars {
 	public void setShort_name(String short_name) {
 		this.short_name = short_name;
 	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getGroup_id() {
+		return group_id;
+	}
+	public void setGroup_id(String group_id) {
+		this.group_id = group_id;
+	}
+	public String getArtifact_id() {
+		return artifact_id;
+	}
+	public void setArtifact_id(String artifact_id) {
+		this.artifact_id = artifact_id;
+	}
+	
 }

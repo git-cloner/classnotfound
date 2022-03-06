@@ -1,5 +1,6 @@
 package com.gitclone.classnotfound.service;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import com.gitclone.classnotfound.model.Cnf_jars;
+import com.gitclone.classnotfound.model.Cnf_pomattr;
 import com.gitclone.classnotfound.model.Cnf_roots;
 import com.gitclone.classnotfound.model.JarInfo;
 
@@ -131,5 +134,82 @@ public class SyncJarInfoService {
 	public List<Cnf_roots> getAllSyncRoots() {
 		List<Cnf_roots> list = em.createQuery("from Cnf_roots where sync_flag = 0").getResultList();
 		return list;
+	}
+	
+	@Transactional
+	public List<Long> getAllSyncPomsId() {
+		List<Long> list = em.createQuery(
+				"select id from Cnf_jars where download_flag = 2 and group_id is null")
+				//.setMaxResults(10)
+				.getResultList();
+		return list;
+	}
+	
+	@Transactional
+	@Modifying
+	public void syncJarsPom(Long id) {
+		List<Cnf_jars> list = em.createQuery("from Cnf_jars where id = :id")
+				.setParameter("id", id)
+				.getResultList();
+		if (list.size()==0) {
+			return ;
+		}
+		Cnf_jars cnf_jars = list.get(0) ;
+		String pom = cnf_jars.getJar().replaceAll(".jar", ".pom") ;
+		//System.out.println(pom) ;
+		Cnf_pomattr cnf_pomattr = parsePom(pom) ;
+		if (cnf_pomattr!=null) {
+			cnf_jars.setArtifact_id(cnf_pomattr.getArtifactId());
+			cnf_jars.setGroup_id(cnf_pomattr.getGroupId());
+			cnf_jars.setUrl(cnf_pomattr.getUrl());
+			cnf_jars.setName(cnf_pomattr.getName());
+			cnf_jars.setDescription(cnf_pomattr.getDescription());
+			em.merge(cnf_jars) ;
+		}
+	}
+	
+	public Cnf_pomattr parsePom(String url) {		
+		Document doc;
+		try {
+			Cnf_pomattr cnf_pomattr = new Cnf_pomattr() ;
+			doc = Jsoup.connect(url).timeout(60000).get();
+			if (doc.select("groupId").first() != null) {
+				cnf_pomattr.setGroupId(doc.select("groupId").first().text());
+				if(cnf_pomattr.getGroupId().length()>30) {
+					cnf_pomattr.setGroupId(cnf_pomattr.getGroupId().substring(0,30));
+				}
+			}
+			if (doc.select("artifactId").first() != null) {
+				cnf_pomattr.setArtifactId(doc.select("artifactId").first().text());
+				if(cnf_pomattr.getArtifactId().length()>30) {
+					cnf_pomattr.setArtifactId(cnf_pomattr.getArtifactId().substring(0,30));
+				}
+			}
+			if (doc.select("url").first() != null) {
+				cnf_pomattr.setUrl(doc.select("url").first().text());
+				if(cnf_pomattr.getUrl().length()>100) {
+					cnf_pomattr.setUrl(cnf_pomattr.getUrl().substring(0,100));
+				}
+			}
+			if (doc.select("version").first() != null) {
+				cnf_pomattr.setVersion(doc.select("version").first().text());
+			}
+			if (doc.select("name").first() != null) {
+				cnf_pomattr.setName(doc.select("name").first().text());
+				if(cnf_pomattr.getName().length()>150) {
+					cnf_pomattr.setName(cnf_pomattr.getName().substring(0,150));
+				}
+			}
+			if (doc.select("description").first() != null) {
+				cnf_pomattr.setDescription(doc.select("description").first().text()); 
+				if(cnf_pomattr.getDescription().length()>200) {
+					cnf_pomattr.setDescription(cnf_pomattr.getDescription().substring(0,200));
+				}
+			}
+			return cnf_pomattr ;
+		} catch (IOException e) {
+			return null ;
+		}
+		
 	}
 }

@@ -61,11 +61,18 @@ CREATE TABLE `cnf_jars` (
   `upt_date` datetime NOT NULL,
   `size` bigint DEFAULT NULL,
   `download_flag` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `short_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `short_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `reverse_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `groupid` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `artifactid` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `url` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `name` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_cnf_jar_hash` (`jar_hash`) USING BTREE,
-  KEY `idx_cnf_jars_jar` (`jar`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `idx_cnf_jars_jar` (`jar`),
+  KEY `idx_cnf_jars_short` (`short_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=7607663 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `cnf_otherver` (
   `id` bigint NOT NULL,
