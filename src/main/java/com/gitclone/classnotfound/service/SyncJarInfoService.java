@@ -156,7 +156,7 @@ public class SyncJarInfoService {
 		}
 		Cnf_jars cnf_jars = list.get(0) ;
 		String pom = cnf_jars.getJar().replaceAll(".jar", ".pom") ;
-		//System.out.println(pom) ;
+		System.out.println(pom) ;
 		Cnf_pomattr cnf_pomattr = parsePom(pom) ;
 		if (cnf_pomattr!=null) {
 			cnf_jars.setArtifact_id(cnf_pomattr.getArtifactId());

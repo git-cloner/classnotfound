@@ -75,6 +75,8 @@ public class FindJarService {
 			jar.setMirror3(BaseUtils.mirror[3] + url.replaceAll(baseurl, "")) ;
 		}
 		page.setDatas(listResult);
+		//if page size = 0 then find jar by pom attr
+		this.findJarByPomAttr(className,page) ;
 	}
 	
 	public void findJarByLeaseJar(String jarUrl, Page<Cnf_otherver> page) {
@@ -158,6 +160,60 @@ public class FindJarService {
 		for(Cnf_findjars jar : listResult) {
 			String url = jar.getJar() ;
 			jar.setClass_name(jar.getJar().replaceAll(baseurl, "")) ;
+			jar.setPom_name(url.replaceAll("-jar-with-dependencies", "").replaceAll(".jar", ".pom")) ;
+			jar.setMirror1(BaseUtils.mirror[1] + url.replaceAll(baseurl, "")) ;
+			jar.setMirror2(BaseUtils.mirror[2] + url.replaceAll(baseurl, "")) ;
+			jar.setMirror3(BaseUtils.mirror[3] + url.replaceAll(baseurl, "")) ;
+		}
+		page.setDatas(listResult);
+		//if page size = 0 then find jar by pom attr
+		this.findJarByPomAttr(jarName,page) ;
+	}
+	
+	public void findJarByPomAttr(String className, Page<Cnf_findjars> page) {
+		if(page.getTotalCount()>0) {
+			return ;
+		}
+		this.doFindJarByPomAttr("artifact_id", className, page);
+		if (page.getTotalCount()==0) {
+			this.doFindJarByPomAttr("group_id", className, page);
+			if (page.getTotalCount()==0) {
+				this.doFindJarByPomAttr("name", className, page);
+			}
+		}
+	}
+	public void doFindJarByPomAttr(String AttrName,String className, Page<Cnf_findjars> page) {
+		if(className == null) {
+			className = "" ;
+		}
+		int totalCnt = 0;
+		if ("".equals(className)) {
+			page.setTotalCount(totalCnt);
+			page.setDatas(null);
+			return ;
+		}
+		List list = em.createNativeQuery("select count(*) from cnf_classes a,cnf_jars b "
+				+ "where a.jar_hash = b.jar_hash and b." + AttrName + " like :class_name limit 200")
+				.setParameter("class_name", className + "%")
+				.getResultList();
+		if (list.size() > 0) {
+			String str= list.get(0).toString();
+			totalCnt = Integer.valueOf(str) ;
+		}
+		page.setTotalCount(totalCnt);
+		int offset = (page.getCurrentPage() - 1) * page.getPageSize();
+		int limit = page.getPageSize();
+		List<Cnf_findjars> listResult = em
+				.createNativeQuery("select a.id ,b.jar, a.class_name ,b.upt_date,round(b.size / 1024,0) size,"
+						+ "'' file_name,'' mirror1,'' mirror2,'' mirror3,'' pom_name "
+						+ "from cnf_classes a,cnf_jars b "
+						+ "where a.jar_hash = b.jar_hash and b." + AttrName + " like :class_name "
+						+ "order by b.upt_date desc limit " + offset + "," + limit, Cnf_findjars.class)
+				.setParameter("class_name", className + "%")
+				.getResultList();
+		for(Cnf_findjars jar : listResult) {
+			String url = jar.getJar() ;
+			jar.setFile_name(url.substring(url.lastIndexOf('/')+1)) ;
 			jar.setPom_name(url.replaceAll("-jar-with-dependencies", "").replaceAll(".jar", ".pom")) ;
 			jar.setMirror1(BaseUtils.mirror[1] + url.replaceAll(baseurl, "")) ;
 			jar.setMirror2(BaseUtils.mirror[2] + url.replaceAll(baseurl, "")) ;
