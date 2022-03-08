@@ -36,6 +36,9 @@ public class FindJarService {
 			page.setDatas(null);
 			return ;
 		}
+		if (className.endsWith(".jar")) {
+			className = className.replaceAll(".jar", "") ;
+		}
 		if (className.indexOf(".") == -1) {
 			this.findJarByJarName(className,page) ;
 			return ;
