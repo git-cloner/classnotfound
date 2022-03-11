@@ -37,9 +37,10 @@ public class FindJarService {
 			return ;
 		}
 		if (className.endsWith(".jar")) {
-			className = className.replaceAll(".jar", "") ;
+			className = className.replaceAll(".jar", "").replaceAll("\\.", "%") ;
 		}
 		if (className.indexOf(".") == -1) {
+			className = className.replaceAll("\\d+","%").replaceAll("-", "%").replaceAll("%%%", "%").replaceAll("%%", "%");
 			this.findJarByJarName(className,page) ;
 			return ;
 		}
