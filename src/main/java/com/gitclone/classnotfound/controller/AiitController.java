@@ -29,7 +29,7 @@ public class AiitController {
 	@PostMapping("aiit/tasknew")
 	public String taskNew(@RequestParam("multipartFiles[]") List<MultipartFile> multipartFiles,
 			@RequestParam("body") String body) throws IOException {
-		UUID uuid = UUID.randomUUID();
+		String uuid = UUID.randomUUID().toString();
 		for (MultipartFile multipartFile : multipartFiles) {
 			BufferedImage image = ImageIO.read(multipartFile.getInputStream());
 			// ext
@@ -41,7 +41,7 @@ public class AiitController {
 			// save
 			ImageIO.write(image, "jpg", outputFile);
 		}
-		aiitService.taskNew(uuid.toString(), body) ;
+		aiitService.taskNew(uuid, body) ;
 		return "{\"taskid\":\"" + uuid.toString() + "\"}" ;
 	}
 	
