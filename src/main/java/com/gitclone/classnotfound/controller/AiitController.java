@@ -42,7 +42,8 @@ public class AiitController {
 			ImageIO.write(image, "jpg", outputFile);
 		}
 		aiitService.taskNew(uuid, body) ;
-		return "{\"taskid\":\"" + uuid.toString() + "\"}" ;
+		aiitService.taskNewBroadCast(uuid, body) ;
+		return "{\"taskid\":\"" + uuid + "\"}" ;
 	}
 	
 	@PostMapping("aiit/taskquery")
@@ -50,6 +51,20 @@ public class AiitController {
 			@RequestBody JSONObject body) throws IOException {
 		String rnt = aiitService.taskQuery(body) ;
 		return rnt ;		
+	}
+	
+	@PostMapping("aiit/tasknotify")
+	public String taskNotify(
+			@RequestBody JSONObject body) throws IOException {
+		String rnt = aiitService.taskNotify(body) ;
+		return rnt ;		
+	}
+	
+	@PostMapping("aiit/taskcancel")
+	public String taskCancel(
+			@RequestBody JSONObject body) throws IOException {
+		aiitService.taskCancel(body) ;
+		return body.toString() ;		
 	}
 	
 }
