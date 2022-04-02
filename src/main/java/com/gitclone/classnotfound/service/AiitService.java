@@ -8,6 +8,9 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,13 +53,19 @@ public class AiitService {
 	@Async
 	public void taskNewBroadCast(String taskid,String body) {
 		//post to calc node
-		String nodeUrl= "http://127.0.0.1/node0/newtask" ;
+		String nodeUrl= "https://classnotfound.com.cn/aiit/node0/newtask" ;
 		JSONObject jsonObject= JSONObject.fromObject(body) ;
 		jsonObject.put("taskid", taskid) ;
 		JSONObject paramsObject = (JSONObject) jsonObject.get("params") ;
 		paramsObject.put("photo", "https://classnotfound.com.cn/aiit/task_images/" + taskid + ".jpg") ;
-		JSONObject json = restTemplate.postForEntity(nodeUrl, jsonObject, JSONObject.class).getBody();	
-		System.out.println(json) ;
+		sendToNode(nodeUrl, jsonObject);
+	}
+
+	private void sendToNode(String nodeUrl, JSONObject jsonObject) {
+		HttpHeaders headers = new HttpHeaders() ;
+		headers.setContentType(MediaType.APPLICATION_JSON) ;
+		HttpEntity<String> request = new HttpEntity<String>(jsonObject.toString(),headers) ;
+		restTemplate.postForEntity(nodeUrl, request, String.class);
 	}
 	
 	public String taskQuery(JSONObject body) {
@@ -91,8 +100,7 @@ public class AiitService {
 	@Async
 	public void taskCancel(JSONObject body) {
 		//post to calc node
-		String nodeUrl= "http://127.0.0.1/node0/taskcancel" ;
-		JSONObject json = restTemplate.postForEntity(nodeUrl, body, JSONObject.class).getBody();
-		System.out.println(json) ;
+		String nodeUrl= "https://classnotfound.com.cn/aiit/node0/canceltask" ;
+		sendToNode(nodeUrl, body);
 	}
 }
