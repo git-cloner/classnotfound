@@ -1,5 +1,6 @@
 package com.gitclone.classnotfound.service;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -88,12 +89,18 @@ public class AiitService {
 	@Transactional
 	@Modifying
 	public String taskNotify(JSONObject body) {
+		String taskid = body.getString("taskid") ;
 		em.createQuery(
 				"update Aiit_tasks set finished_time = :ftime,status = '1',results = :results where taskid = :tid")
-			.setParameter("tid", body.getString("taskid"))
+			.setParameter("tid", taskid)
 			.setParameter("ftime", new Date())
 			.setParameter("results", body.toString())
 			.executeUpdate() ;
+		String path = "./task_images/" + taskid + ".jpg";
+		File file = new File(path);
+		if(file.exists()) {
+			file.delete() ;	
+		}		
 		return "{}" ;
 	}
 	
