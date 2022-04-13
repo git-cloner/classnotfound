@@ -39,7 +39,9 @@ public class AiitController {
 			File outputFile = new File(path);
 			outputFile.getParentFile().mkdirs();
 			// save
-			ImageIO.write(image, "jpg", outputFile);
+			if (image!=null) {
+				ImageIO.write(image, "jpg", outputFile);	
+			}			
 		}
 		aiitService.taskNew(uuid, body) ;
 		aiitService.taskNewBroadCast(uuid, body) ;

@@ -34,6 +34,7 @@ public class AiitService {
 	@Modifying
 	@Async
 	public void taskNew(String taskid,String body) {
+		System.out.println(body) ;
 		//json params
 		JSONObject jsonObject= JSONObject.fromObject(body) ;
 		String params = "" ;
@@ -53,13 +54,19 @@ public class AiitService {
 	
 	@Async
 	public void taskNewBroadCast(String taskid,String body) {
-		//post to calc node
-		String nodeUrl= "https://classnotfound.com.cn/aiit/node0/newtask" ;
 		JSONObject jsonObject= JSONObject.fromObject(body) ;
-		jsonObject.put("taskid", taskid) ;
-		JSONObject paramsObject = (JSONObject) jsonObject.get("params") ;
-		paramsObject.put("photo", "https://classnotfound.com.cn/aiit/task_images/" + taskid + ".jpg") ;
-		sendToNode(nodeUrl, jsonObject);
+		if ("generate".equals(jsonObject.getString("task"))) {
+			String nodeUrl= "https://classnotfound.com.cn/aiit/node0/generate" ;
+			jsonObject.put("taskid", taskid) ;
+			sendToNode(nodeUrl, jsonObject);
+		}
+		else {			
+			String nodeUrl= "https://classnotfound.com.cn/aiit/node0/newtask" ;
+			jsonObject.put("taskid", taskid) ;
+			JSONObject paramsObject = (JSONObject) jsonObject.get("params") ;
+			paramsObject.put("photo", "https://classnotfound.com.cn/aiit/task_images/" + taskid + ".jpg") ;
+			sendToNode(nodeUrl, jsonObject);
+		}
 	}
 
 	private void sendToNode(String nodeUrl, JSONObject jsonObject) {
@@ -70,6 +77,7 @@ public class AiitService {
 	}
 	
 	public String taskQuery(JSONObject body) {
+		System.out.println(body) ;
 		List<Aiit_tasks> list = em.createQuery("from Aiit_tasks where taskid = :tid")
 			.setParameter("tid", body.getString("taskid"))
 			.getResultList() ;
@@ -89,6 +97,7 @@ public class AiitService {
 	@Transactional
 	@Modifying
 	public String taskNotify(JSONObject body) {
+		System.out.println(body) ;
 		String taskid = body.getString("taskid") ;
 		em.createQuery(
 				"update Aiit_tasks set finished_time = :ftime,status = '1',results = :results where taskid = :tid")
@@ -106,6 +115,7 @@ public class AiitService {
 	
 	@Async
 	public void taskCancel(JSONObject body) {
+		System.out.println(body) ;
 		//post to calc node
 		String nodeUrl= "https://classnotfound.com.cn/aiit/node0/canceltask" ;
 		sendToNode(nodeUrl, body);
