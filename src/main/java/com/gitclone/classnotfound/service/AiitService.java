@@ -7,11 +7,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +32,6 @@ public class AiitService {
 	@Modifying
 	@Async
 	public void taskNew(String taskid,String body) {
-		System.out.println(body) ;
 		//json params
 		JSONObject jsonObject= JSONObject.fromObject(body) ;
 		String params = "" ;
@@ -56,26 +53,19 @@ public class AiitService {
 	public void taskNewBroadCast(String taskid,String body) {
 		JSONObject jsonObject= JSONObject.fromObject(body) ;
 		if ("generate".equals(jsonObject.getString("task"))) {
-			String nodeUrl= "https://classnotfound.com.cn/aiit/node0/generate" ;
+			//String nodeUrl= "https://classnotfound.com.cn/aiit/node0/generate" ;
 			jsonObject.put("taskid", taskid) ;
-			sendToNode(nodeUrl, jsonObject);
+			this.setToChain(jsonObject.toString());
 		}
 		else {			
-			String nodeUrl= "https://classnotfound.com.cn/aiit/node0/newtask" ;
+			//String nodeUrl= "https://classnotfound.com.cn/aiit/node0/newtask" ;
 			jsonObject.put("taskid", taskid) ;
 			JSONObject paramsObject = (JSONObject) jsonObject.get("params") ;
 			paramsObject.put("photo", "https://classnotfound.com.cn/aiit/task_images/" + taskid + ".jpg") ;
-			sendToNode(nodeUrl, jsonObject);
+			this.setToChain(jsonObject.toString());
 		}
 	}
 
-	private void sendToNode(String nodeUrl, JSONObject jsonObject) {
-		HttpHeaders headers = new HttpHeaders() ;
-		headers.setContentType(MediaType.APPLICATION_JSON) ;
-		HttpEntity<String> request = new HttpEntity<String>(jsonObject.toString(),headers) ;
-		restTemplate.postForEntity(nodeUrl, request, String.class);
-	}
-	
 	public String taskQuery(JSONObject body) {
 		System.out.println(body) ;
 		List<Aiit_tasks> list = em.createQuery("from Aiit_tasks where taskid = :tid")
@@ -99,25 +89,56 @@ public class AiitService {
 	public String taskNotify(JSONObject body) {
 		System.out.println(body) ;
 		String taskid = body.getString("taskid") ;
+		String nodeid = body.getString("nodeid") ;
+		List<Aiit_tasks> list = 
+				em.createQuery("from Aiit_tasks where  taskid = :tid")
+				.setParameter("tid", taskid)
+				.getResultList() ;
+		if (list.size()>0) {
+			String result = list.get(0).getResults() ;
+			if(result != null) {
+				if(!result.contains("\"" + nodeid + "\"")) {
+					 throw new RuntimeException("task has been received") ;
+				}	
+			}			
+		}
 		em.createQuery(
 				"update Aiit_tasks set finished_time = :ftime,status = '1',results = :results where taskid = :tid")
 			.setParameter("tid", taskid)
 			.setParameter("ftime", new Date())
 			.setParameter("results", body.toString())
 			.executeUpdate() ;
+		removeImage(taskid);		
+		return "{}" ;
+	}
+
+	private void removeImage(String taskid) {
 		String path = "./task_images/" + taskid + ".jpg";
 		File file = new File(path);
 		if(file.exists()) {
 			file.delete() ;	
-		}		
-		return "{}" ;
+		}
 	}
 	
 	@Async
 	public void taskCancel(JSONObject body) {
-		System.out.println(body) ;
 		//post to calc node
-		String nodeUrl= "https://classnotfound.com.cn/aiit/node0/canceltask" ;
-		sendToNode(nodeUrl, body);
+		//String nodeUrl= "https://classnotfound.com.cn/aiit/node0/canceltask" ;
+		//sendToNode(nodeUrl, body);
+		String taskid = body.getString("taskid") ;
+		removeImage(taskid);
+		this.setToChain(body.toString());
+	}
+	
+	public void setToChain(String body) {
+		System.out.println("send to chain:\n" + body) ;
+		String url = "http://120.253.47.149:26657/broadcast_tx_commit?tx=\"" + Base64.encodeBase64String(body.getBytes()) + "\"" ;
+		String result = restTemplate.getForObject(url,String.class) ;
+		System.out.println("recieve from chain:\n" + result) ;
+	}
+	
+	public static void main(String[] args) {
+		String body = "Base64.encodeBase64String(body.getBytes()" ;
+		System.out.println(Base64.encodeBase64String(body.getBytes())) ;
 	}
 }
