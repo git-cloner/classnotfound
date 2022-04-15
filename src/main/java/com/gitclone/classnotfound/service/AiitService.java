@@ -1,6 +1,7 @@
 package com.gitclone.classnotfound.service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class AiitService {
 		if ("generate".equals(jsonObject.getString("task"))) {
 			//String nodeUrl= "https://classnotfound.com.cn/aiit/node0/generate" ;
 			jsonObject.put("taskid", taskid) ;
+			jsonObject.put("timestamp", this.getCurrentTimeStamp()) ;
 			this.setToChain(jsonObject.toString());
 		}
 		else {			
@@ -62,6 +64,7 @@ public class AiitService {
 			jsonObject.put("taskid", taskid) ;
 			JSONObject paramsObject = (JSONObject) jsonObject.get("params") ;
 			paramsObject.put("photo", "https://classnotfound.com.cn/aiit/task_images/" + taskid + ".jpg") ;
+			jsonObject.put("timestamp", this.getCurrentTimeStamp()) ;
 			this.setToChain(jsonObject.toString());
 		}
 	}
@@ -127,7 +130,13 @@ public class AiitService {
 		//sendToNode(nodeUrl, body);
 		String taskid = body.getString("taskid") ;
 		removeImage(taskid);
+		body.put("timestamp", this.getCurrentTimeStamp()) ;
 		this.setToChain(body.toString());
+	}
+	
+	public String getCurrentTimeStamp() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		return formatter.format(new Date());
 	}
 	
 	public void setToChain(String body) {
