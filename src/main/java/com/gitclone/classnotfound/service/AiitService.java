@@ -151,9 +151,19 @@ public class AiitService {
 	
 	@Async
 	public void taskConfirm(JSONObject body) {
-		body.put("timestamp", this.getCurrentTimeStamp()) ;
-		body.put("type","confirm") ;
-		body.put("fee",1) ;
-		this.setToChain(body.toString());
+		List<Aiit_tasks> list = em.createQuery("from Aiit_tasks where taskid = :tid and status = 1")
+			.setParameter("tid", body.getString("taskid"))
+			.getResultList() ;
+		if(list.size()>0) {
+			JSONObject results = JSONObject.fromObject(list.get(0).getResults()) ;
+			if(results != null) {
+				body.put("timestamp", this.getCurrentTimeStamp()) ;
+				body.put("type","confirm") ;
+				body.put("nodeid", results.getString("nodeid")) ;
+				body.put("fee",1) ;
+				this.setToChain(body.toString());	
+			}
+			
+		}
 	}
 }
