@@ -153,6 +153,7 @@ public class AiitService {
 	public void taskConfirm(JSONObject body) {
 		body.put("timestamp", this.getCurrentTimeStamp()) ;
 		body.put("type","confirm") ;
+		body.put("fee",1) ;
 		this.setToChain(body.toString());
 	}
 }
