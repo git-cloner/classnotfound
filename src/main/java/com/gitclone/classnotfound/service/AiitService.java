@@ -125,12 +125,10 @@ public class AiitService {
 	
 	@Async
 	public void taskCancel(JSONObject body) {
-		//post to calc node
-		//String nodeUrl= "https://classnotfound.com.cn/aiit/node0/canceltask" ;
-		//sendToNode(nodeUrl, body);
 		String taskid = body.getString("taskid") ;
 		removeImage(taskid);
 		body.put("timestamp", this.getCurrentTimeStamp()) ;
+		body.put("type","cancel") ;
 		this.setToChain(body.toString());
 	}
 	
@@ -149,5 +147,12 @@ public class AiitService {
 	public static void main(String[] args) {
 		String body = "Base64.encodeBase64String(body.getBytes()" ;
 		System.out.println(Base64.encodeBase64String(body.getBytes())) ;
+	}
+	
+	@Async
+	public void taskConfirm(JSONObject body) {
+		body.put("timestamp", this.getCurrentTimeStamp()) ;
+		body.put("type","confirm") ;
+		this.setToChain(body.toString());
 	}
 }

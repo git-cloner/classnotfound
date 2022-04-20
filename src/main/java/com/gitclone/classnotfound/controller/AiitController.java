@@ -69,4 +69,11 @@ public class AiitController {
 		return body.toString() ;		
 	}
 	
+	@PostMapping("aiit/taskconfirm")
+	public String taskConfirm(
+			@RequestBody JSONObject body) throws IOException {
+		aiitService.taskConfirm(body) ;
+		return body.toString() ;		
+	}
+	
 }
