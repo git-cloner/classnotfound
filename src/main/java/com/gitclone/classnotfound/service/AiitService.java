@@ -53,7 +53,7 @@ public class AiitService {
 	@Async
 	public void taskNewBroadCast(String taskid,String body) {
 		JSONObject jsonObject= JSONObject.fromObject(body) ;
-		if ("generate".equals(jsonObject.getString("task"))) {
+		if ("generate".equals(jsonObject.getString("type"))) {
 			//String nodeUrl= "https://classnotfound.com.cn/aiit/node0/generate" ;
 			jsonObject.put("taskid", taskid) ;
 			jsonObject.put("timestamp", this.getCurrentTimeStamp()) ;
