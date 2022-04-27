@@ -51,7 +51,7 @@ public class AiitService {
 	}
 	
 	@Async
-	public void taskNewBroadCast(String taskid,String body) {
+	public void taskNewBroadCast(String taskid,String body,String ext) {
 		JSONObject jsonObject= JSONObject.fromObject(body) ;
 		if ("generate".equals(jsonObject.getString("type"))) {
 			//String nodeUrl= "https://classnotfound.com.cn/aiit/node0/generate" ;
@@ -63,7 +63,7 @@ public class AiitService {
 			//String nodeUrl= "https://classnotfound.com.cn/aiit/node0/newtask" ;
 			jsonObject.put("taskid", taskid) ;
 			JSONObject paramsObject = (JSONObject) jsonObject.get("params") ;
-			paramsObject.put("photo", "https://classnotfound.com.cn/aiit/task_images/" + taskid + ".jpg") ;
+			paramsObject.put("photo", "https://classnotfound.com.cn/aiit/task_images/" + taskid + ext) ;
 			jsonObject.put("timestamp", this.getCurrentTimeStamp()) ;
 			this.setToChain(jsonObject.toString());
 		}
@@ -116,10 +116,17 @@ public class AiitService {
 	}
 
 	private void removeImage(String taskid) {
+		//remove jpg
 		String path = "./task_images/" + taskid + ".jpg";
 		File file = new File(path);
 		if(file.exists()) {
 			file.delete() ;	
+		}
+		//remove jpeg
+		path = "./task_images/" + taskid + ".jpeg";
+		File file1 = new File(path);
+		if(file1.exists()) {
+			file1.delete() ;	
 		}
 	}
 	

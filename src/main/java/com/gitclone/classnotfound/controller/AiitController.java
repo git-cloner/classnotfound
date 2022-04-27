@@ -30,10 +30,11 @@ public class AiitController {
 	public String taskNew(@RequestParam("multipartFiles[]") List<MultipartFile> multipartFiles,
 			@RequestParam("body") String body) throws IOException {
 		String uuid = UUID.randomUUID().toString();
+		String extention = ".jpg" ;
 		for (MultipartFile multipartFile : multipartFiles) {
 			BufferedImage image = ImageIO.read(multipartFile.getInputStream());
 			// ext
-			String extention = "." + multipartFile.getContentType().split("/")[1];
+			extention = "." + multipartFile.getContentType().split("/")[1];
 			// path
 			String path = "./task_images/" + uuid + extention;
 			File outputFile = new File(path);
@@ -44,7 +45,7 @@ public class AiitController {
 			}			
 		}
 		aiitService.taskNew(uuid, body) ;
-		aiitService.taskNewBroadCast(uuid, body) ;
+		aiitService.taskNewBroadCast(uuid, body,extention) ;
 		return "{\"taskid\":\"" + uuid + "\"}" ;
 	}
 	
