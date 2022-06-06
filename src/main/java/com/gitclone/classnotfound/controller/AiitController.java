@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,6 +76,20 @@ public class AiitController {
 			@RequestBody JSONObject body) throws IOException {
 		aiitService.taskConfirm(body) ;
 		return body.toString() ;		
+	}
+	
+	@PostMapping("aiit/meeting")
+	public String meetingCmd(@RequestBody JSONObject body) {
+		String rnt = "" ;
+		try {
+			rnt = aiitService.execMeetingCmd(body) ;
+			rnt = "{\"code\":\"0\",\"message\":\"\",\"result\":" + rnt + "}" ;
+			
+		} catch (IOException e) {
+			e.printStackTrace() ;
+			rnt = "{\"code\":\"1\",\"message\":\"" +  Base64.encodeBase64String(e.getMessage().getBytes()) + "\",\"result\":\"\"}" ;
+		}
+		return rnt ;
 	}
 	
 }

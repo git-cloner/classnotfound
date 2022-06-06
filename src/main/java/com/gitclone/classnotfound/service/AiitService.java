@@ -1,6 +1,10 @@
 package com.gitclone.classnotfound.service;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -172,5 +176,42 @@ public class AiitService {
 			}
 			
 		}
+	}
+	
+	public String execMeetingCmd(JSONObject body) throws IOException {
+		String params = body.getString("params") ;
+		String api_key = System.getenv("MEETING-API-KEY") ;
+		String api_secret = System.getenv("MEETING-API-SECRET") ;
+		String api_url = System.getenv("MEETING-URL") ;
+		//
+		java.lang.Process process = null;
+		String cmd = "livekit-cli "+ params + " --api-key "+ api_key + " --api-secret " + api_secret ;
+		if (params.contains("create-room") ) {
+			cmd = cmd + " --url " + api_url ;
+		}
+		System.out.println(cmd) ;
+		process = Runtime.getRuntime().exec(cmd);
+		ByteArrayOutputStream resultOutStream = new ByteArrayOutputStream();
+		InputStream errorInStream = new BufferedInputStream(process.getErrorStream());
+		InputStream processInStream = new BufferedInputStream(process.getInputStream());
+		int num = 0;
+		byte[] bs = new byte[1024];
+		while((num=errorInStream.read(bs))!=-1){
+			resultOutStream.write(bs,0,num);
+		}
+		while((num=processInStream.read(bs))!=-1){
+			resultOutStream.write(bs,0,num);
+		}
+		String result = new String(resultOutStream.toByteArray());
+		//parse token
+		if (result.contains("access token: ")) {
+			int i = result.indexOf("access token: ") ;
+			result = "{\"token\":\"" + result.substring(i+18).trim() + "\"}";
+		}
+		//
+		if (!(result.contains("{"))) {
+			result = "{\"exception\":\"" + result.trim() + "\"}";
+		}
+		return result ;
 	}
 }
