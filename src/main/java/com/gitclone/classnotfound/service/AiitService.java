@@ -185,7 +185,7 @@ public class AiitService {
 		String api_url = System.getenv("MEETING_URL") ;
 		//
 		java.lang.Process process = null;
-		String cmd = "livekit-cli "+ params + " --api-key "+ api_key + " --api-secret " + api_secret ;
+		String cmd = "./livekit-cli "+ params + " --api-key "+ api_key + " --api-secret " + api_secret ;
 		if (params.contains("create-room") ) {
 			cmd = cmd + " --url " + api_url ;
 		}
