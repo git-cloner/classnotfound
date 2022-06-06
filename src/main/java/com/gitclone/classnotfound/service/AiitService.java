@@ -180,9 +180,9 @@ public class AiitService {
 	
 	public String execMeetingCmd(JSONObject body) throws IOException {
 		String params = body.getString("params") ;
-		String api_key = System.getenv("MEETING-API-KEY") ;
-		String api_secret = System.getenv("MEETING-API-SECRET") ;
-		String api_url = System.getenv("MEETING-URL") ;
+		String api_key = System.getenv("MEETING_API_KEY") ;
+		String api_secret = System.getenv("MEETING_API_SECRET") ;
+		String api_url = System.getenv("MEETING_URL") ;
 		//
 		java.lang.Process process = null;
 		String cmd = "livekit-cli "+ params + " --api-key "+ api_key + " --api-secret " + api_secret ;
