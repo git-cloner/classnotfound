@@ -206,7 +206,7 @@ public class AiitService {
 		//parse token
 		if (result.contains("access token: ")) {
 			int i = result.indexOf("access token: ") ;
-			result = "{\"token\":\"" + result.substring(i+18).trim() + "\"}";
+			result = "{\"token\":\"" + result.substring(i+14).trim() + "\"}";
 		}
 		//
 		if (!(result.contains("{"))) {
