@@ -80,16 +80,11 @@ public class AiitController {
 	
 	@PostMapping("aiit/meeting")
 	public String meetingCmd(@RequestBody JSONObject body) {
-		String rnt = "" ;
 		try {
-			rnt = aiitService.execMeetingCmd(body) ;
-			rnt = "{\"code\":\"0\",\"message\":\"\",\"result\":" + rnt + "}" ;
-			
+			return  aiitService.execMeetingCmd(body) ;
 		} catch (IOException e) {
-			e.printStackTrace() ;
-			rnt = "{\"code\":\"1\",\"message\":\"" +  Base64.encodeBase64String(e.getMessage().getBytes()) + "\",\"result\":\"\"}" ;
+			return "{\"code\":\"1\",\"message\":\"unknow exception\",\"result\":\"\"}" ;
 		}
-		return rnt ;
 	}
 	
 }

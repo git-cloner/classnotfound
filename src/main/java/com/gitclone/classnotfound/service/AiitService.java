@@ -178,17 +178,87 @@ public class AiitService {
 		}
 	}
 	
+	private String genRandomNumber(int l) {
+		String x = "";
+        for(int n =0 ; n<l;n++ ) {
+            x+=(int)(10*(Math.random()));
+        }
+        return x; 
+	}
+	
+	private String createNewMeetingRoom(String passWord) throws IOException {
+		String api_key = System.getenv("MEETING_API_KEY") ;
+		String api_secret = System.getenv("MEETING_API_SECRET") ;
+		String api_url = System.getenv("MEETING_URL") ;
+		String roomNum = "" ;
+		int i = 0 ;
+		while(true) {
+			roomNum = this.genRandomNumber(6) ;
+			if (AiitCache.getCache(roomNum)==null) {
+				String cmd = "./livekit-cli list-rooms"  + " --api-key "+ api_key + " --api-secret " + api_secret + " --url " + api_url + " |grep "+ roomNum;
+				String list = exec(cmd) ;
+				if (list.indexOf(roomNum)==-1){
+					AiitCache.addCache(roomNum,passWord, 60 * 30);
+				}			
+				break ;
+			}
+			i++ ;
+			if (i==100) {
+				roomNum = "" ; 
+				break ;
+			}
+		}
+		return roomNum ;
+	}
+	
 	public String execMeetingCmd(JSONObject body) throws IOException {
 		String params = body.getString("params") ;
 		String api_key = System.getenv("MEETING_API_KEY") ;
 		String api_secret = System.getenv("MEETING_API_SECRET") ;
 		String api_url = System.getenv("MEETING_URL") ;
-		//
-		java.lang.Process process = null;
-		String cmd = "./livekit-cli "+ params + " --api-key "+ api_key + " --api-secret " + api_secret ;
-		if (params.contains("create-room") ) {
-			cmd = cmd + " --url " + api_url ;
+		if (params.contains("create-room")) {
+			String passWord = genRandomNumber(4) ;
+			String roomNum = createNewMeetingRoom(passWord) ;			
+			if("".equals(roomNum)) {
+				return "{\"code\":\"1\",\"message\":\"cannot get a room number\",\"result\":{}}" ;
+			}
+			else {
+				String cmd = "./livekit-cli create-room --name " + roomNum + " --api-key "+ api_key + " --api-secret " + api_secret + " --url " + api_url ;
+				exec(cmd) ;
+				return "{\"code\":\"0\",\"message\":\"\",\"result\":{\"roomnum\":\"" + roomNum+ "\",\"password\":\""+ passWord + "\"}}" ;
+			}
 		}
+		else if (params.contains("create-token")) {
+			if (!params.contains("-p")) {
+				return "{\"code\":\"1\",\"message\":\"密码不能为空\",\"result\":{}}" ;
+			}
+			int j = params.indexOf("-p") ;
+			String password = params.substring(j + 2).trim() ;
+			params = params.substring(0, j-1).trim() ;
+			j = params.indexOf("--room") ;
+			int k = params.indexOf("--join") ;
+			String roomnum = params.substring(j+6,k-1).trim() ;
+			String sourcePassword = (String) AiitCache.getCache(roomnum);
+			if(!password.equals(sourcePassword)) {
+				return "{\"code\":\"1\",\"message\":\"密码错误\",\"result\":{}}" ;
+			}
+			String cmd = "./livekit-cli " + params + " --api-key "+ api_key + " --api-secret " + api_secret ;
+			String result = exec(cmd) ;
+			if (result.contains("access token: ")) {
+				int i = result.indexOf("access token: ") ;
+				result = "{\"token\":\"" + result.substring(i+14).trim() + "\"}";
+				return "{\"code\":\"0\",\"message\":\"\",\"result\":" + result + "}" ;
+			}else {
+				return "{\"code\":\"1\",\"message\":\"unkown exception\",\"result\":{}}" ;
+			}
+		}
+		else {
+			return "{\"code\":\"1\",\"message\":\"unknow params\",\"result\":{}}" ;
+		}		
+	}
+
+	private String exec(String cmd) throws IOException {
+		java.lang.Process process = null;
 		System.out.println(cmd) ;
 		process = Runtime.getRuntime().exec(cmd);
 		ByteArrayOutputStream resultOutStream = new ByteArrayOutputStream();
@@ -203,15 +273,6 @@ public class AiitService {
 			resultOutStream.write(bs,0,num);
 		}
 		String result = new String(resultOutStream.toByteArray());
-		//parse token
-		if (result.contains("access token: ")) {
-			int i = result.indexOf("access token: ") ;
-			result = "{\"token\":\"" + result.substring(i+14).trim() + "\"}";
-		}
-		//
-		if (!(result.contains("{"))) {
-			result = "{\"exception\":\"" + result.trim() + "\"}";
-		}
-		return result ;
+		return result;
 	}
 }
