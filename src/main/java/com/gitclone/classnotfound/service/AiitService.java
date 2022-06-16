@@ -277,7 +277,7 @@ public class AiitService {
 		}
 		if (result.contains("EgressID")) {
 			result = result.replaceAll("EgressID:","").replaceAll("Status: EGRESS_STARTING", "").trim() ;
-			return "{\"code\":\"0\",\"message\":\"\",\"result\":\"" + result + "\"}" ;
+			return "{\"code\":\"0\",\"message\":\"\",\"result\":{\"egressid\":\"" + result + "\",\"liveurl\":\"" + liveurl + "_" + "\"}}" ;
 		}
 		else {
 			return "{\"code\":\"1\",\"message\":\"" +  result.trim() + "\",\"result\":\"\"}" ;
