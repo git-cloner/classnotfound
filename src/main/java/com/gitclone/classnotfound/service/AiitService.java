@@ -254,15 +254,16 @@ public class AiitService {
 		String trackid = params.substring(k+7,j-1).trim() ;
 		String liveurl = params.substring(j+9,params.length()).trim() ;
 		String requestBody = 
-			"{" + 
-			"	  \"room_name\": \"" + roomnum + "\"," +
-			"	  \"video_track_id\": \"" + trackid + "\"," +
-			"	   \"stream\": {" +
-			"	    \"urls\": [" +
-			"	      \"" + liveurl + "\" " +
-			"	    ]" +
-			"	  }" +
+			"{" + "\n" +
+			"	  \"room_name\": \"" + roomnum + "\"," +"\n" +
+			"	  \"video_track_id\": \"" + trackid + "\"," +"\n" +
+			"	   \"stream\": {" +"\n" +
+			"	    \"urls\": [" +"\n" +
+			"	      \"" + liveurl + "\" " +"\n" +
+			"	    ]" +"\n" +
+			"	  }" +"\n" +
 			"}" ;
+		System.out.println(requestBody) ;
 		String fileName = trackid + ".json" ;
 		FileWriter writer = new FileWriter(fileName ) ;
 		writer.write(requestBody) ;
