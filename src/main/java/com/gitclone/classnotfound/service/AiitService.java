@@ -187,7 +187,7 @@ public class AiitService {
         return x; 
 	}
 	
-	private String createNewMeetingRoom(String passWord) throws IOException {
+	private String createNewMeetingRoom() throws IOException {
 		String api_key = System.getenv("MEETING_API_KEY") ;
 		String api_secret = System.getenv("MEETING_API_SECRET") ;
 		String api_url = System.getenv("MEETING_URL") ;
@@ -199,7 +199,7 @@ public class AiitService {
 				String cmd = "./livekit-cli list-rooms"  + " --api-key "+ api_key + " --api-secret " + api_secret + " --url " + api_url + " |grep "+ roomNum;
 				String list = exec(cmd) ;
 				if (list.indexOf(roomNum)==-1){
-					AiitCache.addCache(roomNum,passWord, 60 * 120); //120 min
+					AiitCache.addCache(roomNum,"0000", 60 * 120); //120 min
 				}			
 				break ;
 			}
@@ -210,6 +210,20 @@ public class AiitService {
 			}
 		}
 		return roomNum ;
+	}
+	
+	private String setMeetingRoomPwd(String params) throws IOException {
+		int j = params.indexOf("-p ") ;
+		String password = params.substring(j + 2).trim() ;
+		int k = params.indexOf("--room") ;
+		String roomNum = params.substring(k+6,j-1).trim() ;
+		if (AiitCache.getCache(roomNum)==null) {
+			return "{\"code\":\"1\",\"message\":\"未找到会议室信息\",\"result\":{}}" ;
+		}
+		else {
+			AiitCache.setCache(roomNum,password) ;
+			return  "{\"code\":\"0\",\"message\":\"\",\"result\":{}}" ;
+		}		 
 	}
 	
 	public String execMeetingCmd(JSONObject body) throws IOException {
@@ -228,6 +242,9 @@ public class AiitService {
 		}
 		else if (params.contains("stop-egress")) {
 			return meeting_stop_egress(params, api_key, api_secret,api_url);		
+		}
+		else if (params.contains("set-password")) {
+			return setMeetingRoomPwd(params);		
 		}
 		else {
 			return "{\"code\":\"1\",\"message\":\"unknow params\",\"result\":{}}" ;
@@ -250,9 +267,8 @@ public class AiitService {
 		int j = params.indexOf("--room") ;
 		int k = params.indexOf("--track") ;
 		String roomnum = params.substring(j+6,k-1).trim() ;
-		j = params.indexOf("--liveurl") ;
-		String trackid = params.substring(k+7,j-1).trim() ;
-		String liveurl = params.substring(j+9,params.length()).trim() ;
+		String trackid = params.substring(k+7).trim() ;
+		String liveurl = "rtmp://172.16.62.88:1935/live/" + roomnum +"_" + trackid ;
 		String requestBody = 
 			"{" + "\n" +
 			"	  \"room_name\": \"" + roomnum + "\"," +"\n" +
@@ -278,7 +294,7 @@ public class AiitService {
 		}
 		if (result.contains("EgressID")) {
 			result = result.replaceAll("EgressID:","").replaceAll("Status: EGRESS_STARTING", "").trim() ;
-			return "{\"code\":\"0\",\"message\":\"\",\"result\":{\"egressid\":\"" + result + "\",\"liveurl\":\"" + liveurl + "_" + "\"}}" ;
+			return "{\"code\":\"0\",\"message\":\"\",\"result\":{\"egressid\":\"" + result + "\",\"liveurl\":\"" + liveurl + "\"}}" ;
 		}
 		else {
 			return "{\"code\":\"1\",\"message\":\"" +  result.trim() + "\",\"result\":\"\"}" ;
@@ -311,15 +327,14 @@ public class AiitService {
 	}
 
 	private String meeting_create_room(String api_key, String api_secret, String api_url) throws IOException {
-		String passWord = genRandomNumber(4) ;
-		String roomNum = createNewMeetingRoom(passWord) ;			
+		String roomNum = createNewMeetingRoom() ;			
 		if("".equals(roomNum)) {
 			return "{\"code\":\"1\",\"message\":\"cannot get a room number\",\"result\":{}}" ;
 		}
 		else {
 			String cmd = "./livekit-cli create-room --name " + roomNum + " --api-key "+ api_key + " --api-secret " + api_secret + " --url " + api_url ;
 			exec(cmd) ;
-			return "{\"code\":\"0\",\"message\":\"\",\"result\":{\"roomnum\":\"" + roomNum+ "\",\"password\":\""+ passWord + "\"}}" ;
+			return "{\"code\":\"0\",\"message\":\"\",\"result\":{\"roomnum\":\"" + roomNum+ "\"}}" ;
 		}
 	}
 
