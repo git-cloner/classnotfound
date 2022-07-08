@@ -265,10 +265,14 @@ public class AiitService {
 	
 	private String meeting_start_egress(String params, String api_key, String api_secret,String api_url) throws IOException {
 		int j = params.indexOf("--room") ;
+		int x = params.indexOf("--name") ;
+		int y = params.indexOf("--avatar") ;
 		int k = params.indexOf("--track") ;
-		String roomnum = params.substring(j+6,k-1).trim() ;
+		String roomnum = params.substring(j+6,x-1).trim() ;
+		String name = params.substring(x+6,y-1).trim() ;
+		String avatar = params.substring(y+8,k-1).trim() ;
 		String trackid = params.substring(k+7).trim() ;
-		String liveurl = "rtmp://172.16.62.88:1935/live/" + roomnum +"_" + trackid ;
+		String liveurl = "rtmp://172.16.62.88:1935/live/" + roomnum +"__" + name + "__" + avatar ;
 		String requestBody = 
 			"{" + "\n" +
 			"	  \"room_name\": \"" + roomnum + "\"," +"\n" +
