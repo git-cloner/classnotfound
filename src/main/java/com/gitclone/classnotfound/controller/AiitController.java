@@ -87,4 +87,37 @@ public class AiitController {
 		}
 	}
 	
+	@PostMapping("aiit/useravatar")
+	public String userAvatar(@RequestParam("multipartFiles[]") List<MultipartFile> multipartFiles,
+			@RequestParam("body") String body) throws IOException{
+		String extention = ".jpg" ;
+		JSONObject jsonObject= JSONObject.fromObject(body) ;
+		String userName = jsonObject.getString("username") ;
+		String token = jsonObject.getString("token") ;
+		if (!aiitService.checkUserPwd(userName, token)) {
+			return "{\"code\":\"1\",\"message\":\"user auth error\"}" ;
+		}
+		boolean havaImage = false ;
+		for (MultipartFile multipartFile : multipartFiles) {
+			BufferedImage image = ImageIO.read(multipartFile.getInputStream());
+			// ext
+			extention = "." + multipartFile.getContentType().split("/")[1];
+			// path
+			String path = "./avatar/" + userName + extention;
+			File outputFile = new File(path);
+			outputFile.getParentFile().mkdirs();
+			// save
+			if (image!=null) {
+				ImageIO.write(image, "jpg", outputFile);
+				havaImage = true ;
+			}	
+		}
+		if (!havaImage) {
+			return "{\"code\":\"1\",\"message\":\"no image data\"}" ;
+		}else {
+			return "{\"code\":\"0\",\"message\":\"\"}" ;
+		}
+		
+	}
+	
 }

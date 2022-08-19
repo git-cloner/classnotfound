@@ -16,9 +16,16 @@ import javax.persistence.PersistenceContext;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import com.gitclone.classnotfound.model.Aiit_tasks;
@@ -33,6 +40,9 @@ public class AiitService {
 	
 	@Autowired
 	private RestTemplate restTemplate ;
+	
+	@Autowired
+	private RestTemplate restTemplateGet ;
 	
 	@Transactional
 	@Modifying
@@ -359,5 +369,26 @@ public class AiitService {
 		}
 		String result = new String(resultOutStream.toByteArray());
 		return result;
+	}
+	
+	public boolean checkUserPwd(String userName,String token) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Content-type", "application/json");
+		headers.set("Accept", "application/json; charset=utf-8");
+		headers.set("Authorization", "Basic " + token) ;
+		String url = "https://gitclone.com/gogs/api/v1/users/" + userName + "/tokens" ;
+		restTemplateGet.setErrorHandler((ResponseErrorHandler) new DefaultResponseErrorHandler(){
+		      @Override
+		      public void handleError(ClientHttpResponse response) throws IOException{
+		        if(response.getRawStatusCode() != 401){
+		           super.handleError(response);
+		        }
+		      }
+		 });
+		ResponseEntity<String> rnt = restTemplateGet.exchange(url,
+                		 HttpMethod.GET,
+                		 new HttpEntity(headers), 
+                		 String.class); 
+		return rnt.getStatusCodeValue() == 200 ;
 	}
 }
