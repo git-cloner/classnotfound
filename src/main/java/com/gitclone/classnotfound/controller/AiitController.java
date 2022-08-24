@@ -102,6 +102,9 @@ public class AiitController {
 			BufferedImage image = ImageIO.read(multipartFile.getInputStream());
 			// ext
 			extention = "." + multipartFile.getContentType().split("/")[1];
+			if(".jpeg".equals(extention)) {
+				extention = ".jpg" ;
+			}
 			// path
 			String path = "./avatar/" + userName + extention;
 			File outputFile = new File(path);
